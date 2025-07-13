@@ -1,6 +1,3 @@
-
-
-
 import React from "react";
 import CTAButton from "./Button";
 import { TypeAnimation } from "react-type-animation";
@@ -18,16 +15,12 @@ const CodeBlocks = ({
 }) => {
   return (
     <div className={`flex ${position} my-18 justify-between px-5 `}>
-
-
       {/* Section 1  */}
       <div className="w-[50%] flex flex-col gap-8 px-10">
         {heading}
 
         {/* Sub Heading */}
-        <div className="text-[#838894] font-bold ">
-          {subheading}
-        </div>
+        <div className="text-[#838894] font-bold ">{subheading}</div>
 
         {/* Button Group */}
         <div className="flex gap-7 mt-7">
