@@ -1,8 +1,8 @@
-import React from "react"
+import React from "react";
 
-import Footer from "../components/Common/Footer"
-import ContactDetails from "../components/core/ContactUsPage/ContactDetails"
-import ContactForm from "../components/core/ContactUsPage/ContactForm"
+import Footer from "../components/Common/Footer";
+import ContactDetails from "../components/ContactPage/ContactDetails";
+import ContactForm from "../components/ContactPage/ContactForm";
 
 const Contact = () => {
   return (
@@ -27,7 +27,7 @@ const Contact = () => {
       </div>
       <Footer />
     </div>
-  )
-}
+  );
+};
 
-export default Contact
+export default Contact;

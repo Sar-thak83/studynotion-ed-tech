@@ -33,7 +33,7 @@ const TimelineSection = () => {
     <div>
       <div className="flex flex-col lg:flex-row gap-20 mb-20 items-center">
         <div className="lg:w-[45%] flex flex-col gap-14 lg:gap-3">
-          {timeLine.map((ele, i) => {
+          {TimeLine.map((ele, i) => {
             return (
               <div className="flex flex-col lg:gap-3" key={i}>
                 <div className="flex gap-6" key={i}>

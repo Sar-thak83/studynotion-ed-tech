@@ -58,9 +58,10 @@ const ContactUsForm = () => {
             name="firstname"
             id="firstname"
             placeholder="Enter first name"
-            className="form-style"
+            className="w-full px-3 py-2 rounded-lg bg-gray-800 text-gray-300 placeholder-gray-400 border border-gray-600"
             {...register("firstname", { required: true })}
           />
+
           {errors.firstname && (
             <span className="-mt-1 text-[12px] text-[#E7C009]">
               Please enter your name.
@@ -76,7 +77,7 @@ const ContactUsForm = () => {
             name="lastname"
             id="lastname"
             placeholder="Enter last name"
-            className="form-style"
+            className="w-full px-3 py-2 rounded-lg bg-gray-800 text-gray-300 placeholder-gray-400 border border-gray-600"
             {...register("lastname")}
           />
         </div>
@@ -91,7 +92,7 @@ const ContactUsForm = () => {
           name="email"
           id="email"
           placeholder="Enter email address"
-          className="form-style"
+          className="w-full px-3 py-2 rounded-lg bg-gray-800 text-gray-300 placeholder-gray-400 border border-gray-600"
           {...register("email", { required: true })}
         />
         {errors.email && (
@@ -113,7 +114,7 @@ const ContactUsForm = () => {
               name="firstname"
               id="firstname"
               placeholder="Enter first name"
-              className="form-style"
+              className="w-full px-3 py-2 rounded-lg bg-gray-800 text-gray-300 placeholder-gray-400 border border-gray-600"
               {...register("countrycode", { required: true })}
             >
               {CountryCode.map((ele, i) => {
@@ -131,7 +132,7 @@ const ContactUsForm = () => {
               name="phonenumber"
               id="phonenumber"
               placeholder="12345 67890"
-              className="form-style"
+              className="w-full px-3 py-2 rounded-lg bg-gray-800 text-gray-300 placeholder-gray-400 border border-gray-600"
               {...register("phoneNo", {
                 required: {
                   value: true,
@@ -160,7 +161,7 @@ const ContactUsForm = () => {
           cols="30"
           rows="7"
           placeholder="Enter your message here"
-          className="form-style"
+          className="w-full px-3 py-2 rounded-lg bg-gray-800 text-gray-300 placeholder-gray-400 border border-gray-600"
           {...register("message", { required: true })}
         />
         {errors.message && (

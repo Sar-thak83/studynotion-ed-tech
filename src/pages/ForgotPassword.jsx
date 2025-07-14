@@ -1,20 +1,20 @@
-import { useState } from "react"
-import { BiArrowBack } from "react-icons/bi"
-import { useDispatch, useSelector } from "react-redux"
-import { Link } from "react-router-dom"
+import { useState } from "react";
+import { BiArrowBack } from "react-icons/bi";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
-import { getPasswordResetToken } from "../services/operations/authAPI"
+import { getPasswordResetToken } from "../services/operations/authAPI";
 
 function ForgotPassword() {
-  const [email, setEmail] = useState("")
-  const [emailSent, setEmailSent] = useState(false)
-  const dispatch = useDispatch()
-  const { loading } = useSelector((state) => state.auth)
+  const [email, setEmail] = useState("");
+  const [emailSent, setEmailSent] = useState(false);
+  const dispatch = useDispatch();
+  const { loading } = useSelector((state) => state.auth);
 
   const handleOnSubmit = (e) => {
-    e.preventDefault()
-    dispatch(getPasswordResetToken(email, setEmailSent))
-  }
+    e.preventDefault();
+    dispatch(getPasswordResetToken(email, setEmailSent));
+  };
 
   return (
     <div className="grid min-h-[calc(100vh-3.5rem)] place-items-center">
@@ -27,7 +27,7 @@ function ForgotPassword() {
           </h1>
           <p className="my-4 text-[1.125rem] leading-[1.625rem] text-[#AFB2BF]">
             {!emailSent
-              ? "Have no fear. We'll email you instructions to reset your password. If you dont have access to your email we can try account recovery"
+              ? "Have no fear. We'll email you instructions to reset your password. If you dont have access to your email we can try account recovery."
               : `We have sent the reset email to ${email}`}
           </p>
           <form onSubmit={handleOnSubmit}>
@@ -43,7 +43,7 @@ function ForgotPassword() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter email address"
-                  className="form-style w-full"
+                  className="w-full px-3 py-2 rounded-lg bg-gray-800 text-gray-300 placeholder-gray-400 border border-gray-600"
                 />
               </label>
             )}
@@ -64,7 +64,7 @@ function ForgotPassword() {
         </div>
       )}
     </div>
-  )
+  );
 }
 
-export default ForgotPassword
+export default ForgotPassword;
