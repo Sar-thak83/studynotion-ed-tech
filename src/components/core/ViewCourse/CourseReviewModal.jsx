@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 import { RxCross2 } from "react-icons/rx";
 import ReactStars from "react-rating-stars-component";
 import { useSelector } from "react-redux";
-
 import { createRating } from "../../../services/operations/courseDetailsAPI";
 import IconBtn from "../../common/IconBtn";
 
@@ -22,11 +21,9 @@ export default function CourseReviewModal({ setReviewModal }) {
   useEffect(() => {
     setValue("courseExperience", "");
     setValue("courseRating", 0);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const ratingChanged = (newRating) => {
-    // console.log(newRating)
     setValue("courseRating", newRating);
   };
 
@@ -45,14 +42,12 @@ export default function CourseReviewModal({ setReviewModal }) {
   return (
     <div className="fixed inset-0 z-[1000] !mt-0 grid h-screen w-screen place-items-center overflow-auto bg-white bg-opacity-10 backdrop-blur-sm">
       <div className="my-10 w-11/12 max-w-[700px] rounded-lg border border-[#6E727F] bg-[#161D29]">
-        {/* Modal Header */}
         <div className="flex items-center justify-between rounded-t-lg bg-[#2C333F] p-5">
           <p className="text-xl font-semibold text-[#F1F2FF]">Add Review</p>
           <button onClick={() => setReviewModal(false)}>
             <RxCross2 className="text-2xl text-[#F1F2FF]" />
           </button>
         </div>
-        {/* Modal Body */}
         <div className="p-6">
           <div className="flex items-center justify-center gap-x-4">
             <img

@@ -35,7 +35,6 @@ export async function buyCourse(
 ) {
   const toastId = toast.loading("Loading...");
   try {
-    //load the script
     const res = await loadScript(
       "https://checkout.razorpay.com/v1/checkout.js"
     );
@@ -45,7 +44,6 @@ export async function buyCourse(
       return;
     }
 
-    //initiate the order
     const orderResponse = await apiConnector(
       "POST",
       COURSE_PAYMENT_API,
@@ -59,7 +57,6 @@ export async function buyCourse(
       throw new Error(orderResponse.data.message);
     }
     console.log("PRINTING orderResponse", orderResponse);
-    //options
     const options = {
       key: process.env.RAZORPAY_KEY,
       currency: orderResponse.data.message.currency,
@@ -73,13 +70,11 @@ export async function buyCourse(
         email: userDetails.email,
       },
       handler: function (response) {
-        //send successful wala mail
         sendPaymentSuccessEmail(
           response,
           orderResponse.data.message.amount,
           token
         );
-        //verifyPayment
         verifyPayment({ ...response, courses }, token, navigate, dispatch);
       },
     };
@@ -116,7 +111,6 @@ async function sendPaymentSuccessEmail(response, amount, token) {
   }
 }
 
-//verify payment
 async function verifyPayment(bodyData, token, navigate, dispatch) {
   const toastId = toast.loading("Verifying Payment....");
   dispatch(setPaymentLoading(true));

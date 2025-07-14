@@ -56,7 +56,6 @@ const TimelineSection = () => {
         </div>
         <div className="relative w-fit h-fit shadow-[#118AB2] shadow-[0px_0px_30px_0px]">
           <div className="absolute lg:left-[50%] lg:bottom-0 lg:translate-x-[-50%] lg:translate-y-[50%] bg-[#014A32] flex lg:flex-row flex-col text-white uppercase py-5 gap-4 lg:gap-0 lg:py-10 ">
-            {/* Section 1 */}
             <div className="flex gap-5 items-center lg:border-r border-[#05A77B] px-7 lg:px-14">
               <h1 className="text-3xl font-bold w-[75px]">10</h1>
               <h1 className="text-[#05A77B] text-sm w-[75px]">
@@ -64,7 +63,6 @@ const TimelineSection = () => {
               </h1>
             </div>
 
-            {/* Section 2 */}
             <div className="flex gap-5 items-center lg:px-14 px-7">
               <h1 className="text-3xl font-bold w-[75px]">250</h1>
               <h1 className="text-[#05A77B] text-sm w-[75px]">

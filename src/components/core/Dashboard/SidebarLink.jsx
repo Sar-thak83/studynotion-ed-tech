@@ -1,17 +1,14 @@
-import * as Icons from "react-icons/vsc"
-import { useDispatch } from "react-redux"
-import { NavLink, matchPath, useLocation } from "react-router-dom"
-
-import { resetCourseState } from "../../../slices/courseSlice"
-
+import * as Icons from "react-icons/vsc";
+import { useDispatch } from "react-redux";
+import { NavLink, matchPath, useLocation } from "react-router-dom";
+import { resetCourseState } from "../../../slices/courseSlice";
 export default function SidebarLink({ link, iconName }) {
-  const Icon = Icons[iconName]
-  const location = useLocation()
-  const dispatch = useDispatch()
-
+  const Icon = Icons[iconName];
+  const location = useLocation();
+  const dispatch = useDispatch();
   const matchRoute = (route) => {
-    return matchPath({ path: route }, location.pathname)
-  }
+    return matchPath({ path: route }, location.pathname);
+  };
 
   return (
     <NavLink
@@ -29,10 +26,9 @@ export default function SidebarLink({ link, iconName }) {
         }`}
       ></span>
       <div className="flex items-center gap-x-2">
-        {/* Icon Goes Here */}
         <Icon className="text-lg" />
         <span>{link.name}</span>
       </div>
     </NavLink>
-  )
+  );
 }

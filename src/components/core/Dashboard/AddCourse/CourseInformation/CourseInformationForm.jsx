@@ -37,14 +37,11 @@ export default function CourseInformationForm() {
       setLoading(true);
       const categories = await fetchCourseCategories();
       if (categories.length > 0) {
-        // console.log("categories", categories)
         setCourseCategories(categories);
       }
       setLoading(false);
     };
-    // if form is in edit mode
     if (editCourse) {
-      // console.log("data populated", editCourse)
       setValue("courseTitle", course.courseName);
       setValue("courseShortDesc", course.courseDescription);
       setValue("coursePrice", course.price);
@@ -55,13 +52,10 @@ export default function CourseInformationForm() {
       setValue("courseImage", course.thumbnail);
     }
     getCategories();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const isFormUpdated = () => {
     const currentValues = getValues();
-    // console.log("changes after editing form values:", currentValues)
     if (
       currentValues.courseTitle !== course.courseName ||
       currentValues.courseShortDesc !== course.courseDescription ||
@@ -78,19 +72,11 @@ export default function CourseInformationForm() {
     return false;
   };
 
-  //   handle next button click
   const onSubmit = async (data) => {
-    // console.log(data)
-
     if (editCourse) {
-      // const currentValues = getValues()
-      // console.log("changes after editing form values:", currentValues)
-      // console.log("now course:", course)
-      // console.log("Has Form Changed:", isFormUpdated())
       if (isFormUpdated()) {
         const currentValues = getValues();
         const formData = new FormData();
-        // console.log(data)
         formData.append("courseId", course._id);
         if (currentValues.courseTitle !== course.courseName) {
           formData.append("courseName", data.courseTitle);
@@ -122,7 +108,6 @@ export default function CourseInformationForm() {
         if (currentValues.courseImage !== course.thumbnail) {
           formData.append("thumbnailImage", data.courseImage);
         }
-        // console.log("Edit Form data: ", formData)
         setLoading(true);
         const result = await editCourseDetails(formData, token);
         setLoading(false);
@@ -160,7 +145,6 @@ export default function CourseInformationForm() {
       onSubmit={handleSubmit(onSubmit)}
       className="space-y-8 rounded-md border-[1px] border-[#2C333F] bg-[#161D29] p-6"
     >
-      {/* Course Title */}
       <div className="flex flex-col space-y-2">
         <label className="text-sm text-[#F1F2FF]" htmlFor="courseTitle">
           Course Title <sup className="text-[#EF476F]">*</sup>
@@ -177,7 +161,6 @@ export default function CourseInformationForm() {
           </span>
         )}
       </div>
-      {/* Course Short Description */}
       <div className="flex flex-col space-y-2">
         <label className="text-sm text-[#F1F2FF]" htmlFor="courseShortDesc">
           Course Short Description <sup className="text-[#EF476F]">*</sup>
@@ -194,7 +177,6 @@ export default function CourseInformationForm() {
           </span>
         )}
       </div>
-      {/* Course Price */}
       <div className="flex flex-col space-y-2">
         <label className="text-sm text-[#F1F2FF]" htmlFor="coursePrice">
           Course Price <sup className="text-[#EF476F]">*</sup>
@@ -220,7 +202,6 @@ export default function CourseInformationForm() {
           </span>
         )}
       </div>
-      {/* Course Category */}
       <div className="flex flex-col space-y-2">
         <label className="text-sm text-[#F1F2FF]" htmlFor="courseCategory">
           Course Category <sup className="text-[#EF476F]">*</sup>
@@ -247,7 +228,6 @@ export default function CourseInformationForm() {
           </span>
         )}
       </div>
-      {/* Course Tags */}
       <ChipInput
         label="Tags"
         name="courseTags"
@@ -257,7 +237,6 @@ export default function CourseInformationForm() {
         setValue={setValue}
         getValues={getValues}
       />
-      {/* Course Thumbnail Image */}
       <Upload
         name="courseImage"
         label="Course Thumbnail"
@@ -266,7 +245,6 @@ export default function CourseInformationForm() {
         errors={errors}
         editData={editCourse ? course?.thumbnail : null}
       />
-      {/* Benefits of the course */}
       <div className="flex flex-col space-y-2">
         <label className="text-sm text-[#F1F2FF]" htmlFor="courseBenefits">
           Benefits of the course <sup className="text-[#EF476F]">*</sup>
@@ -283,7 +261,6 @@ export default function CourseInformationForm() {
           </span>
         )}
       </div>
-      {/* Requirements/Instructions */}
       <RequirementsField
         name="courseRequirements"
         label="Requirements/Instructions"
@@ -292,7 +269,6 @@ export default function CourseInformationForm() {
         errors={errors}
         getValues={getValues}
       />
-      {/* Next Button */}
       <div className="flex justify-end gap-x-2">
         {editCourse && (
           <button
