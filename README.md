@@ -214,21 +214,21 @@ Before adding courses, you must create categories:
 
 ```
 Study-Notion-master/
-├── public/                 # Static files
-├── src/                   # Frontend source code
-│   ├── components/        # React components
+├── public/               # Static files
+├── src/                  # Frontend source code
+│   ├── components/       # React components
 │   ├── pages/            # Page components
 │   ├── services/         # API services
-│   └── utils/            # Utility functions
+│   ├── utils/            # Utility functions
+│   └── .env              # Backend environment variables
 ├── server/               # Backend source code
 │   ├── controllers/      # Route controllers
 │   ├── middleware/       # Custom middleware
-│   ├── models/          # Database models
-│   ├── routes/          # API routes
-│   └── utils/           # Server utilities
-├── .env                 # Frontend environment variables
-├── server/.env          # Backend environment variables
-└── README.md           # This file
+│   ├── models/           # Database models
+│   ├── routes/           # API routes
+│   └── utils/            # Server utilities
+├── .env                  # Frontend environment variables
+└── README.md             # This file
 ```
 
 ## 🌐 API Endpoints
