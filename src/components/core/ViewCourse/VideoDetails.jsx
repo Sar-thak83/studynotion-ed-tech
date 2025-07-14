@@ -1,11 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-
 import "video-react/dist/video-react.css";
 import { useLocation } from "react-router-dom";
 import { BigPlayButton, Player } from "video-react";
-
 import { markLectureAsComplete } from "../../../services/operations/courseDetailsAPI";
 import { updateCompletedLectures } from "../../../slices/viewCourseSlice";
 import IconBtn from "../../common/IconBtn";
@@ -31,15 +29,12 @@ const VideoDetails = () => {
       if (!courseId && !sectionId && !subSectionId) {
         navigate(`/dashboard/enrolled-courses`);
       } else {
-        // console.log("courseSectionData", courseSectionData)
         const filteredData = courseSectionData.filter(
           (course) => course._id === sectionId
         );
-        // console.log("filteredData", filteredData)
         const filteredVideoData = filteredData?.[0]?.subSection.filter(
           (data) => data._id === subSectionId
         );
-        // console.log("filteredVideoData", filteredVideoData)
         setVideoData(filteredVideoData[0]);
         setPreviewSource(courseEntireData.thumbnail);
         setVideoEnded(false);
@@ -47,7 +42,6 @@ const VideoDetails = () => {
     })();
   }, [courseSectionData, courseEntireData, location.pathname]);
 
-  // check if the lecture is the first video of the course
   const isFirstVideo = () => {
     const currentSectionIndx = courseSectionData.findIndex(
       (data) => data._id === sectionId
@@ -64,10 +58,7 @@ const VideoDetails = () => {
     }
   };
 
-  // go to the next video
   const goToNextVideo = () => {
-    // console.log(courseSectionData)
-
     const currentSectionIndx = courseSectionData.findIndex(
       (data) => data._id === sectionId
     );
@@ -78,8 +69,6 @@ const VideoDetails = () => {
     const currentSubSectionIndx = courseSectionData[
       currentSectionIndx
     ].subSection.findIndex((data) => data._id === subSectionId);
-
-    // console.log("no of subsections", noOfSubsections)
 
     if (currentSubSectionIndx !== noOfSubsections - 1) {
       const nextSubSectionId =
@@ -99,7 +88,6 @@ const VideoDetails = () => {
     }
   };
 
-  // check if the lecture is the last video of the course
   const isLastVideo = () => {
     const currentSectionIndx = courseSectionData.findIndex(
       (data) => data._id === sectionId
@@ -122,10 +110,7 @@ const VideoDetails = () => {
     }
   };
 
-  // go to the previous video
   const goToPrevVideo = () => {
-    // console.log(courseSectionData)
-
     const currentSectionIndx = courseSectionData.findIndex(
       (data) => data._id === sectionId
     );
@@ -185,7 +170,6 @@ const VideoDetails = () => {
           src={videoData?.videoUrl}
         >
           <BigPlayButton position="center" />
-          {/* Render When Video Ends */}
           {videoEnded && (
             <div
               style={{
@@ -206,7 +190,6 @@ const VideoDetails = () => {
                 disabled={loading}
                 onclick={() => {
                   if (playerRef?.current) {
-                    // set the current time of the video to 0
                     playerRef?.current?.seek(0);
                     setVideoEnded(false);
                   }
@@ -246,4 +229,3 @@ const VideoDetails = () => {
 };
 
 export default VideoDetails;
-// video

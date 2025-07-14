@@ -1,9 +1,8 @@
 import "./App.css";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Home from "./pages/Home";
-import Navbar from "./components/common/Navbar";
+import Navbar from "./components/Common/Navbar";
 import OpenRoute from "./components/core/Auth/OpenRoute";
-
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -27,7 +26,7 @@ import Catalog from "./pages/Catalog";
 import CourseDetails from "./pages/CourseDetails";
 import ViewCourse from "./pages/ViewCourse";
 import VideoDetails from "./components/core/ViewCourse/VideoDetails";
-import Instructor from "./components/core/Dashboard/InstructorDashboard/Instructor";
+import Instructor from "./components/core/Dashboard/InstructorDasboard/Instructor";
 
 function App() {
   const dispatch = useDispatch();
@@ -36,7 +35,7 @@ function App() {
   const { user } = useSelector((state) => state.profile);
 
   return (
-    <div className="w-screen min-h-screen bg-richblack-900 flex flex-col font-inter">
+    <div className="w-screen min-h-screen bg-[#000814] flex flex-col font-inter">
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />

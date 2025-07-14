@@ -49,7 +49,6 @@ export default function Instructor() {
       ) : courses.length > 0 ? (
         <div>
           <div className="my-4 flex h-[450px] space-x-4">
-            {/* Render chart / graph */}
             {totalAmount > 0 || totalStudents > 0 ? (
               <InstructorChart courses={instructorData} />
             ) : (
@@ -60,7 +59,6 @@ export default function Instructor() {
                 </p>
               </div>
             )}
-            {/* Total Statistics */}
             <div className="flex min-w-[250px] flex-col rounded-md bg-[#161D29] p-6">
               <p className="text-lg font-bold text-[#F1F2FF]">Statistics</p>
               <div className="mt-4 space-y-4">
@@ -86,7 +84,6 @@ export default function Instructor() {
             </div>
           </div>
           <div className="rounded-md bg-[#161D29] p-6">
-            {/* Render 3 courses */}
             <div className="flex items-center justify-between">
               <p className="text-lg font-bold text-[#F1F2FF]">Your Courses</p>
               <Link to="/dashboard/my-courses">

@@ -5,7 +5,6 @@ import { BsFillCaretRightFill } from "react-icons/bs";
 import { FaShareSquare } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-
 import { addToCart } from "../../../slices/cartSlice";
 import { ACCOUNT_TYPE } from "../../../utils/constants";
 
@@ -45,14 +44,11 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
     });
   };
 
-  // console.log("Student already enrolled ", course?.studentsEnroled, user?._id)
-
   return (
     <>
       <div
         className={`flex flex-col gap-4 rounded-md bg-[#2C333F] p-4 text-[#F1F2FF]`}
       >
-        {/* Course Image */}
         <img
           src={ThumbnailImage}
           alt={course?.courseName}
