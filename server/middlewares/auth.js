@@ -1,92 +1,51 @@
-const jwt = require("jsonwebtoken");
-require("dotenv").config();
-const User = require("../models/User");
+const ErrorResponse = require('../utils/ErrorResponse');
+const jwt = require('jsonwebtoken');
+const clgDev = require('../utils/clgDev');
 
-exports.auth = async (req, res, next) => {
+exports.protect = async (req, res, next) => {
   try {
-    const token =
-      req.cookies.token ||
-      req.body.token ||
-      req.header("Authorization").replace("Bearer", "");
+    // TODO : test which is better
+    // const token = req.cookie.token || req.header("Authorization").replace("Bearer ", "");
+    const token = req.cookies?.token || req.headers?.authorization?.replace('Bearer ', '');
 
     if (!token) {
-      return res.status(401).json({
-        success: false,
-        message: "Token is missing",
-      });
+      return next(new ErrorResponse('User not authorized to access this route', 401));
     }
 
     try {
-      const decode = await jwt.verify(token, process.env.JWT_SECRET);
-      console.log(decode);
+      const decode = jwt.verify(token, process.env.JWT_SECRET);
       req.user = decode;
-    } catch (error) {
-      return res.status(401).json({
-        success: false,
-        message: "token is invalid",
-      });
+      return next();
+    } catch (err) {
+      return next(new ErrorResponse('User not authorized to access this route', 401));
     }
-    next();
-  } catch (error) {
-    console.log(error);
-    return res.status(401).json({
-      success: false,
-      message: "Something went wrong while validating the token",
-    });
+  } catch (err) {
+    next(new ErrorResponse('Something went wrong while validating user', 500));
   }
 };
 
-exports.isStudent = async (req, res, next) => {
-  try {
-    const userDetails = await User.findOne({ email: req.user.email });
-
-    if (userDetails.accountType !== "Student") {
-      return res.status(401).json({
-        success: false,
-        message: "This is a Protected Route for Students",
-      });
+exports.authorize = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return next(new ErrorResponse('User not authorized to access this route', 401));
     }
     next();
-  } catch (error) {
-    return res
-      .status(500)
-      .json({ success: false, message: `User Role Can't be Verified` });
-  }
+  };
 };
-exports.isAdmin = async (req, res, next) => {
-  try {
-    const userDetails = await User.findOne({ email: req.user.email });
 
-    if (userDetails.accountType !== "Admin") {
-      return res.status(401).json({
-        success: false,
-        message: "This is a Protected Route for Admin",
-      });
+
+exports.adminAuthorization = () => {
+  return (req, res, next) => {
+    if (req.user.email !== process.env.SITE_OWNER_EMAIL) {
+      return next(new ErrorResponse('User not authorized to access this route', 401));
     }
     next();
-  } catch (error) {
-    return res
-      .status(500)
-      .json({ success: false, message: `User Role Can't be Verified` });
-  }
-};
-exports.isInstructor = async (req, res, next) => {
-  try {
-    const userDetails = await User.findOne({ email: req.user.email });
-    console.log(userDetails);
+  };
+}
 
-    console.log(userDetails.accountType);
-
-    if (userDetails.accountType !== "Instructor") {
-      return res.status(401).json({
-        success: false,
-        message: "This is a Protected Route for Instructor",
-      });
-    }
-    next();
-  } catch (error) {
-    return res
-      .status(500)
-      .json({ success: false, message: `User Role Can't be Verified` });
+exports.isSiteOwner = (req, res, next) => {
+  if (req.user.email !== process.env.SITE_OWNER_EMAIL) {
+    next(new ErrorResponse('User not authorized to access this route', 401));
   }
+  next();
 };

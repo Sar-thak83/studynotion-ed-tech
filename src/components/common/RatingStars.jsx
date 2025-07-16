@@ -1,38 +1,56 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   TiStarFullOutline,
   TiStarHalfOutline,
   TiStarOutline,
 } from "react-icons/ti";
+import { useState } from "react";
+import { useEffect } from "react";
 
-function RatingStars({ Review_Count, Star_Size }) {
-  const [starCount, SetStarCount] = useState({
+const RatingStars = ({ rating, starSize = 20 }) => {
+  const [starCounts, setStarCounts] = useState({
     full: 0,
     half: 0,
     empty: 0,
   });
 
   useEffect(() => {
-    const wholeStars = Math.floor(Review_Count) || 0;
-    SetStarCount({
-      full: wholeStars,
-      half: Number.isInteger(Review_Count) ? 0 : 1,
-      empty: Number.isInteger(Review_Count) ? 5 - wholeStars : 4 - wholeStars,
+    setStarCounts({
+      full: Math.floor(rating),
+      half: Number.isInteger(rating) ? 0 : 1,
+      empty: 5 - Math.floor(rating) - (Number.isInteger(rating) ? 0 : 1),
     });
-  }, [Review_Count]);
+  }, [rating]);
+
   return (
-    <div className="flex gap-1 text-[#E7C009]">
-      {[...new Array(starCount.full)].map((_, i) => {
-        return <TiStarFullOutline key={i} size={Star_Size || 20} />;
-      })}
-      {[...new Array(starCount.half)].map((_, i) => {
-        return <TiStarHalfOutline key={i} size={Star_Size || 20} />;
-      })}
-      {[...new Array(starCount.empty)].map((_, i) => {
-        return <TiStarOutline key={i} size={Star_Size || 20} />;
-      })}
+    <div className="">
+      {/* <ReactStars
+        count={5}
+        value={rating}
+        edit={false}
+        size={20}
+        isHalf={true}
+        fullIcon={<TiStarFullOutline size={starSize} />}
+        halfIcon={<TiStarHalfOutline size={starSize} />}
+        emptyIcon={<TiStarOutline size={starSize} />}
+        activeColor="#ffd700"
+      /> */}
+
+      <div className="flex gap-1 text-[#E7C009]">
+        {[...new Array(starCounts.full)].map((_, ind) => (
+          <TiStarFullOutline key={ind} size={starSize} />
+        ))}
+
+        {[...new Array(starCounts.half)].map((_, ind) => (
+          <TiStarHalfOutline key={ind} size={starSize} />
+        ))}
+
+        {[...new Array(starCounts.empty)].map((_, ind) => (
+          <TiStarOutline key={ind} size={starSize} />
+        ))}
+      </div>
     </div>
   );
-}
+};
 
 export default RatingStars;

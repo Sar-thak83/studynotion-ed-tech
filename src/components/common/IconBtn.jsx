@@ -1,29 +1,42 @@
-export default function IconBtn({
-    text,
-    onclick,
+import React from "react";
+
+const IconBtn = ({ ...btnData }) => {
+  const {
     children,
+    text,
+    onClickHandler,
     disabled,
     outline = false,
     customClasses,
     type,
-  }) {
-    return (
+  } = btnData;
+
+  return (
+    <div className="text-white">
       <button
+        onClick={onClickHandler}
         disabled={disabled}
-        onClick={onclick}
-        className={`flex items-center ${
-          outline ? "border border-[#FFD60A] bg-transparent" : "bg-[#FFD60A]"
-        } cursor-pointer gap-x-2 rounded-md py-2 px-5 font-semibold text-[#000814] ${customClasses}`}
         type={type}
+        className={` ${customClasses} rounded-md py-2 px-5 font-semibold text-[#000814] 
+        ${disabled ? "cursor-not-allowed" : "cursor-pointer"}
+        ${outline ? "border border-[#FFD60A] bg-transparent" : "bg-[#FFD60A]"}
+        `}
       >
         {children ? (
-          <>
-            <span className={`${outline && "text-[#FFD60A]"}`}>{text}</span>
+          <div
+            className={`flex items-center gap-x-2 
+              ${outline && "text-[#FFD60A]"}
+              `}
+          >
+            {text}
             {children}
-          </>
+          </div>
         ) : (
-          text
+          <div>{text}</div>
         )}
       </button>
-    )
-  }
+    </div>
+  );
+};
+
+export default IconBtn;

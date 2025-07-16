@@ -1,12 +1,22 @@
 const mongoose = require("mongoose");
+
 const sectionSchema = new mongoose.Schema({
-  sectionName: {
+  title: {
     type: String,
+    required: true,
+    trim: true,
   },
-  subSection: [
+  course: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Course",
+  },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
+  subSections: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      required: true,
       ref: "SubSection",
     },
   ],

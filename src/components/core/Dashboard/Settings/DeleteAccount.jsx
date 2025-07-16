@@ -1,46 +1,69 @@
+import React, { useState } from "react";
 import { FiTrash2 } from "react-icons/fi";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { deleteProfile } from "../../../../services/operations/SettingsAPI";
-export default function DeleteAccount() {
+import ConfirmationModal from "../../../common/ConfirmationModal";
+import { deleteCurrentUser } from "../../../../services/operations/settingsServices";
+
+const DeleteAccount = () => {
   const { token } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  async function handleDeleteAccount() {
-    try {
-      dispatch(deleteProfile(token, navigate));
-    } catch (error) {
-      console.log("ERROR MESSAGE - ", error.message);
-    }
-  }
+  const modalData = {
+    text1: "Are you sure?",
+    text2: "Your Account will be deleted permanently",
+    btn1Text: "Delete",
+    btn2Text: "Cancel",
+    btn1Handler: () => deleteCurrentUser(token, dispatch, navigate),
+    btn2Handler: () => setIsModalOpen(false),
+    closeModalHandler: () => setIsModalOpen(false),
+  };
 
   return (
-    <>
-      <div className="my-10 flex flex-row gap-x-5 rounded-md border-[1px] border-[#691432] bg-[#340019] p-8 px-12">
-        <div className="flex aspect-square h-14 w-14 items-center justify-center rounded-full bg-[#691432]">
+    <div className=" mt-7 rounded-md border border-[#691432] bg-[#340019] p-8 px-5 md:px-12">
+      <div className="flex gap-x-5 ">
+        <div className="grid place-items-center aspect-square h-14 w-14  rounded-full bg-[#691432]">
           <FiTrash2 className="text-3xl text-[#EF476F]" />
         </div>
-        <div className="flex flex-col space-y-2">
+
+        <div className="flex flex-col space-y-2 ">
           <h2 className="text-lg font-semibold text-[#F1F2FF]">
             Delete Account
           </h2>
-          <div className="w-3/5 text-[#FBC7D1]">
+          <div className="md:w-3/5 text-[#FBC7D1] space-y-1">
             <p>Would you like to delete account?</p>
-            <p>
+            <p className="tracking-wider">
               This account may contain Paid Courses. Deleting your account is
               permanent and will remove all the contain associated with it.
             </p>
           </div>
+
           <button
             type="button"
-            className="w-fit cursor-pointer italic text-[#D43D63]"
-            onClick={handleDeleteAccount}
+            onClick={() => setIsModalOpen(true)}
+            className="hidden md:block tracking-wider w-fit cursor-pointer italic bg-[#691432] py-1 px-3 rounded-md text-[#EF476F]"
           >
-            I want to delete my account.
+            I want to delete my account
           </button>
         </div>
       </div>
-    </>
+
+      <div className="mt-5 grid place-items-center">
+        <button
+          type="button"
+          onClick={() => setIsModalOpen(true)}
+          className="md:hidden tracking-wider w-fit cursor-pointer italic bg-[#691432] py-1 px-3 rounded-md text-[#EF476F]"
+        >
+          I want to delete my account
+        </button>
+      </div>
+
+      {isModalOpen && <ConfirmationModal modalData={modalData} />}
+    </div>
   );
-}
+};
+
+export default DeleteAccount;

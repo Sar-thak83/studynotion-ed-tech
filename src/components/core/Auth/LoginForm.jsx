@@ -1,20 +1,20 @@
+import React from "react";
 import { useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { login } from "../../../services/operations/authAPI";
+import { login } from "../../../services/operations/authServices";
+import { useDispatch } from "react-redux";
 
-function LoginForm() {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+const LoginForm = () => {
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
-  const [showPassword, setShowPassword] = useState(false);
-
   const { email, password } = formData;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleOnChange = (e) => {
     setFormData((prevData) => ({
@@ -23,67 +23,73 @@ function LoginForm() {
     }));
   };
 
-  const handleOnSubmit = (e) => {
+  const handleOnSubmit = async (e) => {
     e.preventDefault();
-    dispatch(login(email, password, navigate));
+    login(email, password, dispatch, navigate);
   };
 
   return (
-    <form
-      onSubmit={handleOnSubmit}
-      className="mt-6 flex w-full flex-col gap-y-4"
-    >
-      <label className="w-full">
-        <p className="mb-1 text-[0.875rem] leading-[1.375rem] text-[#F1F2FF]">
-          Email Address <sup className="text-[#EF476F]">*</sup>
-        </p>
-        <input
-          required
-          type="text"
-          name="email"
-          value={email}
-          onChange={handleOnChange}
-          placeholder="Enter email address"
-          className="w-full px-3 py-2 rounded-lg bg-gray-800 text-gray-300 placeholder-gray-400 border border-gray-600"
-        />
-      </label>
-      <label className="relative">
-        <p className="mb-1 text-[0.875rem] leading-[1.375rem] text-[#F1F2FF]">
-          Password <sup className="text-[#EF476F]">*</sup>
-        </p>
-        <input
-          required
-          type={showPassword ? "text" : "password"}
-          name="password"
-          value={password}
-          onChange={handleOnChange}
-          placeholder="Enter Password"
-          className="w-full px-3 py-2 rounded-lg bg-gray-800 text-gray-300 placeholder-gray-400 border border-gray-600 !pr-10"
-        />
-        <span
-          onClick={() => setShowPassword((prev) => !prev)}
-          className="absolute right-3 top-[38px] z-[10] cursor-pointer"
-        >
-          {showPassword ? (
-            <AiOutlineEyeInvisible fontSize={24} fill="#AFB2BF" />
-          ) : (
-            <AiOutlineEye fontSize={24} fill="#AFB2BF" />
-          )}
-        </span>
-        <Link to="/forgot-password">
-          <p className="mt-1 ml-auto max-w-max text-xs text-[#47A5C5]">
-            Forgot Password
-          </p>
-        </Link>
-      </label>
-      <button
-        type="submit"
-        className="mt-6 rounded-[8px] bg-[#FFD60A] py-[8px] px-[12px] font-medium text-[#000814]"
+    <div className="">
+      <form
+        className="mt-6 flex w-full flex-col gap-y-4"
+        onSubmit={handleOnSubmit}
       >
-        Sign In
-      </button>
-    </form>
+        <label className="w-full">
+          <p className="mb-1 text-sm leading-[1.375rem] text-[#F1F2FF]">
+            Email Address <sup className="text-[#EF476F]">*</sup>
+          </p>
+          <input
+            type="email"
+            placeholder="Enter Email Address"
+            name="email"
+            value={email}
+            onChange={handleOnChange}
+            required
+            className="w-full placeholder:text-[#6E727F] rounded-lg p-3 pr-12 bg-[#2C333F] text-[#F1F2FF] shadow-[0_1px_0] shadow-[rgba(255,255,255,0.5)]"
+          />
+        </label>
+
+        <label className="w-full relative">
+          <p className="mb-1 text-sm leading-[1.375rem] text-[#F1F2FF]">
+            Password <sup className="text-[#EF476F]">*</sup>
+          </p>
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="Enter Password"
+            name="password"
+            value={password}
+            onChange={handleOnChange}
+            required
+            className="w-full placeholder:text-[#6E727F] rounded-lg p-3 pr-12 bg-[#2C333F] text-[#F1F2FF] shadow-[0_1px_0] shadow-[rgba(255,255,255,0.5)]"
+          />
+
+          <span
+            className="absolute right-3 top-[38px] cursor-pointer"
+            onClick={() => setShowPassword((prev) => !prev)}
+          >
+            {showPassword ? (
+              <AiOutlineEyeInvisible fontSize={24} fill="#AFB2BF" />
+            ) : (
+              <AiOutlineEye fontSize={24} fill="#AFB2BF" />
+            )}
+          </span>
+
+          <Link to="/forgot-password">
+            <p className=" ml-auto mt-1 max-w-max text-[#47A5C5] text-xs">
+              Forgot Password
+            </p>
+          </Link>
+        </label>
+
+        <button
+          type="submit"
+          className="mt-6 rounded-lg bg-[#FFD60A] py-2 px-3 font-medium text-[#000814]"
+        >
+          Sign In
+        </button>
+      </form>
+    </div>
   );
-}
+};
 
 export default LoginForm;

@@ -1,67 +1,77 @@
-import React, { useState } from "react";
-import { HomePageExplore } from "../../../data/homepage-explore";
+import React from "react";
+import { useState } from "react";
+import HighlightedText from "./HighlightedText";
 import CourseCard from "./CourseCard";
-import HighlightText from "./HighlightText";
-
-const tabsName = [
-  "Free",
-  "New to coding",
-  "Most popular",
-  "Skills paths",
-  "Career paths",
-];
+import homePageExplore from "../../../data/homePageExplore";
 
 const ExploreMore = () => {
-  const [currentTab, setCurrentTab] = useState(tabsName[0]);
-  const [courses, setCourses] = useState(HomePageExplore[0].courses);
+  const courseTypes = [
+    "Free",
+    "New to coding",
+    "Most popular",
+    "Skills paths",
+    "Career paths",
+  ];
+  const [currentTab, setCurrentTab] = useState(0);
+  const [currentCourses, setCurrentCourses] = useState(
+    homePageExplore[0].courses
+  );
   const [currentCard, setCurrentCard] = useState(
-    HomePageExplore[0].courses[0].heading
+    homePageExplore[0].courses[0].heading
   );
 
-  const setMyCards = (value) => {
-    setCurrentTab(value);
-    const result = HomePageExplore.filter((course) => course.tag === value);
-    setCourses(result[0].courses);
-    setCurrentCard(result[0].courses[0].heading);
+  const setCurrentTabAndCards = (tabInd) => {
+    setCurrentTab(tabInd);
+    setCurrentCourses(homePageExplore[tabInd].courses);
+    setCurrentCard(homePageExplore[tabInd].courses[0].heading);
   };
 
   return (
-    <div>
+    <div className="flex flex-col mt-10">
       <div>
-        <div className="text-4xl font-semibold text-center my-10">
+        <div className="text-4xl text-center font-semibold">
           Unlock the
-          <HighlightText text={"Power of Code"} />
-          <p className="text-center text-[#838894] text-lg font-semibold mt-1">
-            Learn to Build Anything You Can Imagine
-          </p>
+          <HighlightedText text="Power of Code" />
         </div>
+        <p className="text-lg mt-1 text-[#838894] text-center font-semibold">
+          Learn to Build Anything You Can Imagine
+        </p>
       </div>
 
-      <div className="hidden lg:flex gap-5 -mt-5 mx-auto w-max bg-[#161D29] text-[#999DAA] p-1 rounded-full font-medium drop-shadow-[0_1.5px_rgba(255,255,255,0.25)]">
-        {tabsName.map((ele, index) => {
+      {/* Tabs Section */}
+      <div className="hidden lg:flex gap-5 mx-auto w-max rounded-full mt-5 bg-[#161D29] text-[#999DAA] p-1 font-medium drop-shadow-[0_1.5px_rgba(255,255,255,0.25)]">
+        {courseTypes.map((tab, ind) => {
           return (
             <div
-              className={` text-[16px] flex flex-row items-center gap-2 ${
-                currentTab === ele
-                  ? "bg-[#000814] text-[#F1F2FF] font-medium"
-                  : "text-[#999DAA]"
-              } px-7 py-[7px] rounded-full transition-all duration-200 cursor-pointer hover:bg-[#000814] hover:text-[#F1F2FF]`}
-              key={index}
-              onClick={() => setMyCards(ele)}
+              key={ind}
+              onClick={() => setCurrentTabAndCards(ind)}
+              className={`text-base cursor-pointer rounded-full px-7 py-[7px] 
+                ${
+                  ind === currentTab
+                    ? "bg-[#000814] text-[#F1F2FF] font-medium"
+                    : "text-[#999DAA]"
+                }
+                hover:bg-[#000814] hover:text-[#F1F2FF] transition-all duration-200
+                `}
             >
-              {ele}
+              {tab}
             </div>
           );
         })}
       </div>
+
       <div className="hidden lg:block lg:h-[200px]"></div>
 
-      <div className="lg:absolute gap-10 justify-center lg:gap-0 flex lg:justify-between flex-wrap w-full lg:bottom-[0] lg:left-[50%] lg:translate-x-[-50%] lg:translate-y-[50%] text-black lg:mb-0 mb-7 lg:px-0 px-3">
-        {courses.map((ele, index) => {
+      {/* Card Section */}
+      <div
+        className="flex flex-col lg:flex-row justify-center lg:justify-between gap-10 lg:gap-0 px-3 lg:px-0 mt-10 lg:mt-0 mb-7 lg:mb-0 
+      lg:absolute lg:bottom-0 lg:translate-y-[50%] lg:left-[50%] lg:translate-x-[-50%] w-full"
+      >
+        {currentCourses.map((course, ind) => {
           return (
             <CourseCard
-              key={index}
-              cardData={ele}
+              key={ind}
+              course={course}
               currentCard={currentCard}
               setCurrentCard={setCurrentCard}
             />

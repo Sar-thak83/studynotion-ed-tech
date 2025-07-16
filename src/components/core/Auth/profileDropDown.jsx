@@ -1,56 +1,70 @@
-import { useRef, useState } from "react";
+import React from "react";
+import { useState } from "react";
 import { AiOutlineCaretDown } from "react-icons/ai";
 import { VscDashboard, VscSignOut } from "react-icons/vsc";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { logout } from "../../../services/operations/authServices";
+import { useRef } from "react";
 import useOnClickOutside from "../../../hooks/useOnClickOutside";
-import { logout } from "../../../services/operations/authAPI";
 
-export default function ProfileDropdown() {
+const ProfileDropDown = () => {
+  const { token } = useSelector((state) => state.auth);
   const { user } = useSelector((state) => state.profile);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
-  const ref = useRef(null);
+  const modalRef = useRef(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
-  useOnClickOutside(ref, () => setOpen(false));
+  useOnClickOutside(modalRef, () => setModalOpen(false));
+
+  const handleLogOutClick = (e) => {
+    setModalOpen(false);
+    logout(token, dispatch, navigate);
+  };
 
   if (!user) return null;
 
   return (
-    <button className="relative" onClick={() => setOpen(true)}>
-      <div className="flex items-center gap-x-1">
-        <img
-          src={user?.image}
-          alt={`profile-${user?.firstName}`}
-          className="aspect-square w-[30px] rounded-full object-cover"
-        />
-        <AiOutlineCaretDown className="text-sm text-[#AFB2BF]" />
-      </div>
-      {open && (
-        <div
-          onClick={(e) => e.stopPropagation()}
-          className="absolute top-[118%] right-0 z-[1000] divide-y-[1px] divide-[#2C333F] overflow-hidden rounded-md border-[1px] border-[#2C333F] bg-[#161D29]"
-          ref={ref}
-        >
-          <Link to="/dashboard/my-profile" onClick={() => setOpen(false)}>
-            <div className="flex w-full items-center gap-x-1 py-[10px] px-[12px] text-sm text-[#AFB2BF] hover:bg-[#2C333F] hover:text-[#DBDDEA]">
-              <VscDashboard className="text-lg" />
-              Dashboard
-            </div>
-          </Link>
-          <div
-            onClick={() => {
-              dispatch(logout(navigate));
-              setOpen(false);
-            }}
-            className="flex w-full items-center gap-x-1 py-[10px] px-[12px] text-sm text-[#AFB2BF] hover:bg-[#2C333F] hover:text-[#DBDDEA]"
-          >
-            <VscSignOut className="text-lg" />
-            Logout
-          </div>
+    <div>
+      <button className="relative" onClick={() => setModalOpen(true)}>
+        <div className="flex gap-x-1 items-center">
+          <img
+            src={user.avatar}
+            className="w-[30px] rounded-full aspect-square object-cover"
+            alt="user-avatar"
+          />
+          <AiOutlineCaretDown className="text-sm text-[#AFB2BF]" />
         </div>
-      )}
-    </button>
+
+        <div>
+          {modalOpen && (
+            <div ref={modalRef} onClick={(e) => e.stopPropagation()}>
+              <div className="absolute top-[120%] z-[1000] right-0 bg-[#161D29] rounded-md border border-[#2C333F] divide-y divide-[#2C333F] overflow-hidden ">
+                <Link
+                  to={"/dashboard/my-profile"}
+                  onClick={() => setModalOpen(false)}
+                >
+                  <div className="flex gap-x-1 items-center w-full py-2.5 px-3 text-sm text-[#AFB2BF] hover:text-[#DBDDEA] hover:bg-[#2C333F] ">
+                    <VscDashboard className="text-lg" />
+                    Dashboard
+                  </div>
+                </Link>
+
+                <div
+                  className="flex gap-x-1 items-center w-full py-2.5 px-3 text-sm text-[#AFB2BF] hover:text-[#DBDDEA] hover:bg-[#2C333F] cursor-pointer"
+                  onClick={handleLogOutClick}
+                >
+                  <VscSignOut className="text-lg" />
+                  LogOut
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </button>
+    </div>
   );
-}
+};
+
+export default ProfileDropDown;

@@ -1,30 +1,28 @@
+import React from "react";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { sendOtp } from "../../../services/operations/authAPI";
-import { setSignupData } from "../../../slices/authSlice";
-import { ACCOUNT_TYPE } from "../../../utils/constants";
-import Tab from "../../common/Tab";
+import { setSignUpData } from "../../../redux/slices/authSlice";
+import { sendOtp } from "../../../services/operations/authServices";
 
-function SignupForm() {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const [accountType, setAccountType] = useState(ACCOUNT_TYPE.STUDENT);
-
+const LoginForm = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
     password: "",
     confirmPassword: "",
+    role: "Student",
   });
 
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
-  const { firstName, lastName, email, password, confirmPassword } = formData;
+  const { firstName, lastName, email, password, confirmPassword, role } =
+    formData;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleOnChange = (e) => {
     setFormData((prevData) => ({
@@ -37,105 +35,128 @@ function SignupForm() {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      toast.error("Passwords Do Not Match");
+      toast.error("Password and Confirm password do not match");
       return;
     }
-    const signupData = {
-      ...formData,
-      accountType,
-    };
 
-    dispatch(setSignupData(signupData));
-    dispatch(sendOtp(formData.email, navigate));
-
-    setFormData({
-      firstName: "",
-      lastName: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-    });
-    setAccountType(ACCOUNT_TYPE.STUDENT);
+    // Setting signup data that will be used after otp verification
+    dispatch(setSignUpData(formData));
+    sendOtp(email, dispatch, navigate);
   };
 
-  const tabData = [
-    {
-      id: 1,
-      tabName: "Student",
-      type: ACCOUNT_TYPE.STUDENT,
-    },
-    {
-      id: 2,
-      tabName: "Instructor",
-      type: ACCOUNT_TYPE.INSTRUCTOR,
-    },
-  ];
-
   return (
-    <div>
-      <Tab tabData={tabData} field={accountType} setField={setAccountType} />
-      <form onSubmit={handleOnSubmit} className="flex w-full flex-col gap-y-4">
+    <div className="">
+      <form
+        className="mt-6 flex w-full flex-col gap-y-4"
+        onSubmit={handleOnSubmit}
+      >
+        {/* Radio butoons - Student / Instructor */}
+        <div className="flex gap-x-1 bg-[#161D29] p-1 my-1 rounded-full max-w-max shadow-[0_1px_0] shadow-[rgba(255,255,255,0.3)]">
+          <label
+            className={` py-2 px-5 rounded-full  cursor-pointer transition-all duration-200
+            ${
+              role === "Student"
+                ? "bg-[#000814] text-[#F1F2FF]"
+                : "bg-transparent text-[#999DAA] "
+            }
+          `}
+          >
+            <input
+              type="radio"
+              name="role"
+              value={"Student"}
+              className="appearance-none"
+              onClick={handleOnChange}
+            />
+            Student
+          </label>
+
+          <label
+            className={` py-2 px-5 rounded-full  cursor-pointer transition-all duration-200
+            ${
+              role === "Instructor"
+                ? "bg-[#000814] text-[#F1F2FF]"
+                : "bg-transparent text-[#999DAA] "
+            }
+          `}
+          >
+            <input
+              type="radio"
+              name="role"
+              value={"Instructor"}
+              className={`appearance-none`}
+              onClick={handleOnChange}
+            />
+            Instructor
+          </label>
+        </div>
+
+        {/* First Name and Last Name button */}
         <div className="flex gap-x-4">
-          <label>
-            <p className="mb-1 text-[0.875rem] leading-[1.375rem] text-[#F1F2FF]">
+          <label className="w-full">
+            <p className="mb-1 text-sm leading-[1.375rem] text-[#F1F2FF]">
               First Name <sup className="text-[#EF476F]">*</sup>
             </p>
             <input
-              required
               type="text"
+              placeholder="Enter First Name"
               name="firstName"
               value={firstName}
               onChange={handleOnChange}
-              placeholder="Enter first name"
-              className="w-full px-3 py-2 rounded-lg bg-gray-800 text-gray-300 placeholder-gray-400 border border-gray-600"
+              required
+              className="w-full placeholder:text-[#6E727F] rounded-lg p-3 pr-12 bg-[#2C333F] text-[#F1F2FF] shadow-[0_1px_0] shadow-[rgba(255,255,255,0.5)]"
             />
           </label>
-          <label>
-            <p className="mb-1 text-[0.875rem] leading-[1.375rem] text-[#F1F2FF]">
+
+          <label className="w-full">
+            <p className="mb-1 text-sm leading-[1.375rem] text-[#F1F2FF]">
               Last Name <sup className="text-[#EF476F]">*</sup>
             </p>
             <input
-              required
               type="text"
+              placeholder="Enter Last Name"
               name="lastName"
               value={lastName}
               onChange={handleOnChange}
-              placeholder="Enter last name"
-              className="w-full px-3 py-2 rounded-lg bg-gray-800 text-gray-300 placeholder-gray-400 border border-gray-600"
+              required
+              className="w-full placeholder:text-[#6E727F] rounded-lg p-3 pr-12 bg-[#2C333F] text-[#F1F2FF] shadow-[0_1px_0] shadow-[rgba(255,255,255,0.5)]"
             />
           </label>
         </div>
+
         <label className="w-full">
-          <p className="mb-1 text-[0.875rem] leading-[1.375rem] text-[#F1F2FF]">
+          <p className="mb-1 text-sm leading-[1.375rem] text-[#F1F2FF]">
             Email Address <sup className="text-[#EF476F]">*</sup>
           </p>
           <input
-            required
-            type="text"
+            type="email"
+            placeholder="Enter Email Address"
             name="email"
             value={email}
             onChange={handleOnChange}
-            placeholder="Enter email address"
-            className="w-full px-3 py-2 rounded-lg bg-gray-800 text-gray-300 placeholder-gray-400 border border-gray-600"
+            required
+            className="w-full placeholder:text-[#6E727F] rounded-lg p-3 pr-12 bg-[#2C333F] text-[#F1F2FF] shadow-[0_1px_0] shadow-[rgba(255,255,255,0.5)]"
           />
         </label>
+
         <div className="flex gap-x-4">
-          <label className="relative">
-            <p className="mb-1 text-[0.875rem] leading-[1.375rem] text-[#F1F2FF]">
+          <label className=" relative">
+            <p className="mb-1 text-sm leading-[1.375rem] text-[#F1F2FF]">
               Create Password <sup className="text-[#EF476F]">*</sup>
             </p>
             <input
-              required
               type={showPassword ? "text" : "password"}
+              placeholder="Enter Password"
               name="password"
               value={password}
               onChange={handleOnChange}
-              placeholder="Enter Password"
-              className="w-full px-3 py-2 rounded-lg bg-gray-800 text-gray-300 placeholder-gray-400 border border-gray-600 !pr-10"
+              required
+              className="w-full placeholder:text-[#6E727F] rounded-lg p-3 pr-12 bg-[#2C333F] text-[#F1F2FF] shadow-[0_1px_0] shadow-[rgba(255,255,255,0.5)]"
             />
+
             <span
+              className="absolute right-3 top-[38px] cursor-pointer"
               onClick={() => setShowPassword((prev) => !prev)}
-              className="absolute right-3 top-[38px] z-[10] cursor-pointer"
             >
               {showPassword ? (
                 <AiOutlineEyeInvisible fontSize={24} fill="#AFB2BF" />
@@ -144,22 +165,24 @@ function SignupForm() {
               )}
             </span>
           </label>
+
           <label className="relative">
-            <p className="mb-1 text-[0.875rem] leading-[1.375rem] text-[#F1F2FF]">
+            <p className="mb-1 text-sm leading-[1.375rem] text-[#F1F2FF]">
               Confirm Password <sup className="text-[#EF476F]">*</sup>
             </p>
             <input
-              required
               type={showConfirmPassword ? "text" : "password"}
+              placeholder="Confirm Password"
               name="confirmPassword"
               value={confirmPassword}
               onChange={handleOnChange}
-              placeholder="Confirm Password"
-              className="w-full px-3 py-2 rounded-lg bg-gray-800 text-gray-300 placeholder-gray-400 border border-gray-600 !pr-10"
+              required
+              className="w-full placeholder:text-[#6E727F] rounded-lg p-3 pr-12 bg-[#2C333F] text-[#F1F2FF] shadow-[0_1px_0] shadow-[rgba(255,255,255,0.5)]"
             />
+
             <span
+              className="absolute right-3 top-[38px] cursor-pointer"
               onClick={() => setShowConfirmPassword((prev) => !prev)}
-              className="absolute right-3 top-[38px] z-[10] cursor-pointer"
             >
               {showConfirmPassword ? (
                 <AiOutlineEyeInvisible fontSize={24} fill="#AFB2BF" />
@@ -169,15 +192,16 @@ function SignupForm() {
             </span>
           </label>
         </div>
+
         <button
           type="submit"
-          className="mt-6 rounded-[8px] bg-[#FFD60A] py-[8px] px-[12px] font-medium text-[#000814]"
+          className="mt-6 rounded-lg bg-[#FFD60A] py-2 px-3 font-medium text-[#000814]"
         >
           Create Account
         </button>
       </form>
     </div>
   );
-}
+};
 
-export default SignupForm;
+export default LoginForm;

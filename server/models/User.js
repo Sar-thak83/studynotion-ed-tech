@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
 
 const userSchema = new mongoose.Schema(
   {
@@ -15,16 +16,26 @@ const userSchema = new mongoose.Schema(
     email: {
       type: String,
       required: true,
+      unique: [true, "Enter a valid email"],
       trim: true,
+      match: [
+        /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+        "Please add a valid email",
+      ],
     },
-
     password: {
       type: String,
       required: true,
+      minLength: 6,
+      select: false,
     },
-    accountType: {
+    role: {
       type: String,
       enum: ["Admin", "Student", "Instructor"],
+      required: true,
+    },
+    avatar: {
+      type: String,
       required: true,
     },
     active: {
@@ -35,10 +46,10 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
-    additionalDetails: {
+    profile: {
       type: mongoose.Schema.Types.ObjectId,
-      required: true,
       ref: "Profile",
+      required: true,
     },
     courses: [
       {
@@ -46,24 +57,23 @@ const userSchema = new mongoose.Schema(
         ref: "Course",
       },
     ],
-    token: {
-      type: String,
-    },
-    resetPasswordExpires: {
-      type: Date,
-    },
-    image: {
-      type: String,
-      // required: true,
-    },
     courseProgress: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "courseProgress",
+        ref: "CourseProgress",
       },
     ],
+    reviews: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Review",
+      },
+    ],
+    token: String, // TODO - check if we can remove these 5 fields
+    resetPasswordToken: String,
+    resetPasswordExpire: Date,
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("user", userSchema);
+module.exports = mongoose.model("User", userSchema);

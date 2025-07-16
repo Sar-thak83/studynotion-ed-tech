@@ -1,12 +1,12 @@
-import { FaCheck } from "react-icons/fa";
+import React, { Fragment } from "react";
 import { useSelector } from "react-redux";
+import { FaCheck } from "react-icons/fa";
+import CourseInformationForm from "./CourseInformationForm/CourseInformationForm";
+import CourseBuilderForm from "./CourseBuilderForm/CourseBuilderForm";
+import PublishCourse from "./PublishCourse/PublishCourse";
 
-import CourseBuilderForm from "./CourseBuilder/CourseBuilderForm";
-import CourseInformationForm from "./CourseInformation/CourseInformationForm";
-import PublishCourse from "./PublishCourse";
-
-export default function RenderSteps() {
-  const { step } = useSelector((state) => state.course);
+const RenderSteps = () => {
+  const { step } = useSelector((state) => state.addCourse);
 
   const steps = [
     {
@@ -24,59 +24,68 @@ export default function RenderSteps() {
   ];
 
   return (
-    <>
-      <div className="relative mb-2 flex w-full justify-center">
+    <div>
+      <div className="flex w-full justify-center mb-2">
         {steps.map((item) => (
-          <>
-            <div className="flex flex-col items-center " key={item.id}>
-              <button
-                className={`grid cursor-default aspect-square w-[34px] place-items-center rounded-full border-[1px] ${
-                  step === item.id
-                    ? "border-[#FFD60A] bg-[#251400] text-[#FFD60A]"
-                    : "border-[#2C333F] bg-[#161D29] text-[#838894]"
-                } ${step > item.id && "bg-[#FFD60A] text-[#FFD60A]"}} `}
-              >
-                {step > item.id ? (
-                  <FaCheck className="font-bold text-[#000814]" />
-                ) : (
-                  item.id
-                )}
-              </button>
+          <Fragment key={item.id}>
+            <div
+              className={`grid place-items-center aspect-square rounded-full w-[34px] border select-none
+                ${item.id < step && "bg-[#FFD60A] text-[#FFD60A]"}
+                ${
+                  item.id === step &&
+                  "border-[#FFD60A] bg-[#251400] text-[#FFD60A]"
+                }
+                ${
+                  item.id > step &&
+                  "border-[#2C333F] bg-[#161D29] text-[#838894]"
+                }
+              `}
+            >
+              {item.id < step ? (
+                <FaCheck className="font-bold text-[#000814]" />
+              ) : (
+                item.id
+              )}
             </div>
+
             {item.id !== steps.length && (
               <>
                 <div
-                  className={`h-[calc(34px/2)] w-[33%]  border-dashed border-b-2 ${
-                    step > item.id ? "border-[#FFD60A]" : "border-[#585D69]"
-                  } `}
+                  className={`h-[calc(34px/2)] w-[33%] border-b-2 border-dashed 
+                  ${item.id < step ? "border-[#FFD60A]" : "border-[#585D69]"}
+                  `}
                 ></div>
               </>
             )}
-          </>
+          </Fragment>
         ))}
       </div>
 
-      <div className="relative mb-16 flex w-full select-none justify-between">
-        {steps.map((item) => (
-          <>
+      <div className="mb-10 md:mb-16">
+        <div className="hidden md:flex justify-between select-none ">
+          {steps.map((item) => (
             <div
-              className="flex min-w-[130px] flex-col items-center gap-y-2"
               key={item.id}
+              className={`min-w-[130px] text-center text-sm 
+              ${item.id <= step ? "text-[#F1F2FF]" : "text-[#585D69]"}`}
             >
-              <p
-                className={`text-sm ${
-                  step >= item.id ? "text-[#F1F2FF]" : "text-[#585D69]"
-                }`}
-              >
-                {item.title}
-              </p>
+              {item.title}
             </div>
-          </>
-        ))}
+          ))}
+        </div>
       </div>
+
+      <div className="md:hidden font-semibold mb-5 text-xl">
+        {step === 1 && "CourseInformationForm"}
+        {step === 2 && "CourseBuilderForm"}
+        {step === 3 && "PublishCourse"}
+      </div>
+
       {step === 1 && <CourseInformationForm />}
       {step === 2 && <CourseBuilderForm />}
       {step === 3 && <PublishCourse />}
-    </>
+    </div>
   );
-}
+};
+
+export default RenderSteps;

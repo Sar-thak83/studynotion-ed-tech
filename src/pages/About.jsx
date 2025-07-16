@@ -1,62 +1,85 @@
-import React from "react";
-
+import React, { useEffect, useState } from "react";
+import HighlightedText from "../components/core/HomePage/HighlightedText";
+import Footer from "../components/common/Footer";
 import FoundingStory from "../assets/Images/FoundingStory.png";
 import BannerImage1 from "../assets/Images/aboutus1.webp";
 import BannerImage2 from "../assets/Images/aboutus2.webp";
 import BannerImage3 from "../assets/Images/aboutus3.webp";
-import Footer from "../components/Common/Footer";
-import ContactFormSection from "../components/core/AboutPage/ContactFormSection";
-import LearningGrid from "../components/core/AboutPage/LearningGrid";
 import Quote from "../components/core/AboutPage/Quote";
-import StatsComponenet from "../components/core/AboutPage/Stats";
-import HighlightText from "../components/core/HomePage/HighlightText";
+import StudyNotionStats from "../components/core/AboutPage/Stats";
+import LearningGrid from "../components/core/AboutPage/LearningGrid";
+import ContactUsForm from "../components/core/ContactPage/ContactUsForm";
+import { getAllReviews } from "../services/operations/otherServices";
+import ReviewsSlider from "../components/common/ReviewSlider";
+import Spinner from "../components/common/Spinner";
 
 const About = () => {
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAllReviews = async () => {
+      setLoading(true);
+      const response = await getAllReviews();
+      if (response) {
+        setReviews(response);
+      }
+      setLoading(false);
+    };
+    fetchAllReviews();
+  }, []);
+
   return (
-    <div>
-      <section className="bg-[#2C333F]">
-        <div className="relative mx-auto flex w-11/12 max-w-maxContent flex-col justify-between gap-10 text-center text-white">
-          <header className="mx-auto py-20 text-4xl font-semibold lg:w-[70%]">
+    <div className="text-white">
+      {/* Section 1 */}
+      <div className="bg-[#2C333F]">
+        <div className="relative w-11/12 mx-auto max-w-maxContent flex flex-col justify-between py-20">
+          <h1 className="text-center font-semibold text-4xl mx-auto lg:w-[70%]">
             Driving Innovation in Online Education for a
-            <HighlightText text={"Brighter Future"} />
-            <p className="mx-auto mt-3 text-center text-base font-medium text-[#838894] lg:w-[95%]">
-              Studynotion is at the forefront of driving innovation in online
-              education. We're passionate about creating a brighter future by
-              offering cutting-edge courses, leveraging emerging technologies,
-              and nurturing a vibrant learning community.
-            </p>
-          </header>
-          <div className="sm:h-[70px] lg:h-[150px]"></div>
-          <div className="absolute bottom-0 left-[50%] grid w-[100%] translate-x-[-50%] translate-y-[30%] grid-cols-3 gap-3 lg:gap-5">
+            <HighlightedText text={"Brighter Future"} />
+          </h1>
+
+          <p className="mx-auto lg:w-[70%] mt-3 text-center font-medium text-[#838894]">
+            StudyNotion is at the forefront of driving innovation in online
+            education. We're passionate about creating a brighter future by
+            offering cutting-edge courses, leveraging emerging technologies, and
+            nurturing a vibrant learning community.
+          </p>
+
+          <div className="sm:h-[70px] mt-10 lg:h-[150px]"></div>
+
+          <div className=" absolute bottom-0 translate-y-[30%] left-[50%] translate-x-[-50%] w-full grid grid-cols-3 gap-3 lg:gap-5">
             <img src={BannerImage1} alt="" />
             <img src={BannerImage2} alt="" />
             <img src={BannerImage3} alt="" />
           </div>
         </div>
-      </section>
+      </div>
 
-      <section className="border-b border-[#2C333F]">
-        <div className="mx-auto flex w-11/12 max-w-maxContent flex-col justify-between gap-10 text-[#585D69]">
-          <div className="h-[100px] "></div>
+      {/* Section 2 */}
+      <div className="bg-[#000814] border-b border-[#2C333F]  ">
+        <div className=" w-11/12 mx-auto max-w-maxContent flex flex-col justify-between transform translate-y-10 px-[10px] py-[40px] gap-10">
           <Quote />
         </div>
-      </section>
+      </div>
 
-      <section>
-        <div className="mx-auto flex w-11/12 max-w-maxContent flex-col justify-between gap-10 text-[#585D69]">
-          <div className="flex flex-col items-center gap-10 lg:flex-row justify-between">
-            <div className="my-24 flex lg:w-[50%] flex-col gap-10">
-              <h1 className="bg-gradient-to-br from-[#833AB4] via-[#FD1D1D] to-[#FCB045] bg-clip-text text-4xl font-semibold text-transparent lg:w-[70%] ">
+      {/* Section 3 */}
+      <div className="bg-[#000814]">
+        <div className="w-11/12 mx-auto max-w-maxContent flex flex-col justify-between ">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-10">
+            <div className="flex flex-col gap-10 lg:w-[50%] my-10">
+              <h1 className="text-4xl font-semibold text-transparent bg-clip-text bg-gradient-to-br from-[#833AB4] via-[#FD1D1D] to-[#FCB045]">
                 Our Founding Story
               </h1>
-              <p className="text-base font-medium text-[#838894] lg:w-[95%]">
+              <p className="font-medium text-[#838894] lg:w-[95%]">
                 Our e-learning platform was born out of a shared vision and
                 passion for transforming education. It all began with a group of
                 educators, technologists, and lifelong learners who recognized
                 the need for accessible, flexible, and high-quality learning
                 opportunities in a rapidly evolving digital world.
               </p>
-              <p className="text-base font-medium text-[#838894] lg:w-[95%]">
+
+              <p className="font-medium text-[#838894] lg:w-[95%]">
                 As experienced educators ourselves, we witnessed firsthand the
                 limitations and challenges of traditional education systems. We
                 believed that education should not be confined to the walls of a
@@ -75,12 +98,13 @@ const About = () => {
               />
             </div>
           </div>
-          <div className="flex flex-col items-center lg:gap-10 lg:flex-row justify-between">
-            <div className="my-24 flex lg:w-[40%] flex-col gap-10">
-              <h1 className="bg-gradient-to-b from-[#FF512F] to-[#F09819] bg-clip-text text-4xl font-semibold text-transparent lg:w-[70%] ">
+
+          <div className="flex flex-col lg:flex-row items-center justify-between lg:gap-10 mb-20">
+            <div className="flex flex-col gap-5 lg:gap-10 lg:w-[40%] mt-10 lg:mt-0">
+              <h1 className=" text-4xl font-semibold text-transparent bg-clip-text bg-gradient-to-b from-[#FF512F] to-[#F09819]">
                 Our Vision
               </h1>
-              <p className="text-base font-medium text-[#838894] lg:w-[95%]">
+              <p className="font-medium text-[#838894] lg:w-[95%]">
                 With this vision in mind, we set out on a journey to create an
                 e-learning platform that would revolutionize the way people
                 learn. Our team of dedicated experts worked tirelessly to
@@ -89,11 +113,12 @@ const About = () => {
                 dynamic and interactive learning experience.
               </p>
             </div>
-            <div className="my-24 flex lg:w-[40%] flex-col gap-10">
-              <h1 className="bg-gradient-to-b from-[#1FA2FF] via-[#12D8FA] to-[#A6FFCB] text-transparent bg-clip-text text-4xl font-semibold lg:w-[70%] ">
+
+            <div className="flex flex-col  gap-5 lg:gap-10 lg:w-[40%] mt-10 lg:mt-0">
+              <h1 className="text-4xl font-semibold text-transparent bg-clip-text bg-gradient-to-b from-[#1FA2FF] via-[#12D8FA] to-[#A6FFCB]">
                 Our Mission
               </h1>
-              <p className="text-base font-medium text-[#838894] lg:w-[95%]">
+              <p className="font-medium text-[#838894] lg:w-[95%]">
                 Our mission goes beyond just delivering courses online. We
                 wanted to create a vibrant community of learners, where
                 individuals can connect, collaborate, and learn from one
@@ -104,20 +129,62 @@ const About = () => {
             </div>
           </div>
         </div>
-      </section>
-
-      <StatsComponenet />
-      <section className="mx-auto mt-20 flex w-11/12 max-w-maxContent flex-col justify-between gap-10 text-white">
-        <LearningGrid />
-        <ContactFormSection />
-      </section>
-
-      <div className="relative mx-auto my-20 flex w-11/12 max-w-maxContent flex-col items-center justify-between gap-8 bg-[#000814] text-white">
-        <h1 className="text-center text-4xl font-semibold mt-8">
-          Reviews from other learners
-        </h1>
       </div>
-      <Footer />
+
+      {/* Section 4 */}
+      <div className="bg-[#2C333F] gap-10 ">
+        <StudyNotionStats />
+      </div>
+
+      {/* Section 5 */}
+      <div className="bg-[#000814] ">
+        <div className="w-11/12  mx-auto flex flex-col justify-between px-[10px] py-[50px] gap-10 text-white">
+          <LearningGrid />
+        </div>
+      </div>
+
+      {/* Section 6 */}
+      <div className="bg-[#000814] ">
+        <div className="w-11/12  mx-auto flex flex-col justify-between text-white">
+          <h2 className=" text-4xl font-semibold text-center text-[#F1F2FF]">
+            Get in Touch
+          </h2>
+          <p className=" text-[#838894] text-center mt-3">
+            We'd love to here for you, Please fill out this form.
+          </p>
+          <div className="mx-auto mt-12">
+            <ContactUsForm />
+          </div>
+        </div>
+      </div>
+
+      {/* Section 7 - Review Section */}
+      <div className="bg-[#000814] py-[40px]">
+        <div className="w-11/12  mx-auto flex flex-col justify-between   gap-10 text-white">
+          <div className="mt-8">
+            <h2 className="text-center text-3xl md:text-4xl font-semibold mt-8">
+              Reviews from other learners
+            </h2>
+
+            {/* Reviews Slider */}
+            <div className="">
+              {loading ? (
+                <div className="min-h-[150px] grid place-items-center">
+                  <Spinner />
+                </div>
+              ) : (
+                <div>
+                  <ReviewsSlider reviews={reviews} />
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <Footer />
+      </div>
     </div>
   );
 };

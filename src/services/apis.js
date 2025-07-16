@@ -1,72 +1,94 @@
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
-// Auth ka url hai
-export const endpoints = {
-  SENDOTP_API: BASE_URL + "/auth/sendotp",
-  SIGNUP_API: BASE_URL + "/auth/signup",
-  LOGIN_API: BASE_URL + "/auth/login",
-  RESETPASSTOKEN_API: BASE_URL + "/auth/reset-password-token",
-  RESETPASSWORD_API: BASE_URL + "/auth/reset-password",
+// AUTHENTICATION API
+export const authApi = {
+  POST_SEND_OTP_API: BASE_URL + "/auth/sendotp",
+  POST_SIGNUP_USER_API: BASE_URL + "/auth/signup",
+  POST_LOGIN_USER_API: BASE_URL + "/auth/login",
+  POST_LOGOUT_USER_API: BASE_URL + "/auth/logout",
+  GET_GET_ME_API: BASE_URL + "/auth/getme",
+  PUT_CHANGE_PASSWORD_API: BASE_URL + "/auth/changepassword",
+  POST_FORGOT_PASSWORD_API: BASE_URL + "/auth/forgotpassword",
+  PUT_RESET_PASSWORD_API: BASE_URL + "/auth/resetpassword",
+  POST_CREATE_ADMIN_API: BASE_URL + "/auth/createadmin",
 };
 
-// Profile ka URL hai sarthak
-export const profileEndpoints = {
-  GET_USER_DETAILS_API: BASE_URL + "/profile/getUserDetails",
-  GET_USER_ENROLLED_COURSES_API: BASE_URL + "/profile/getEnrolledCourses",
-  GET_INSTRUCTOR_DATA_API: BASE_URL + "/profile/instructorDashboard",
+// CATAGORIES API
+export const categoriesApi = {
+  GET_GET_ALL_CATEGORIES_API: BASE_URL + "/categories",
+  POST_GET_CATEGORY_COURSES_API: BASE_URL + "/categories/getcategorycourses",
+  POST_GET_CREATE_CATEGORY_API: BASE_URL + "/categories",
 };
 
-// students ka url hai sarthak
-export const studentEndpoints = {
-  COURSE_PAYMENT_API: BASE_URL + "/payment/capturePayment",
-  COURSE_VERIFY_API: BASE_URL + "/payment/verifyPayment",
-  SEND_PAYMENT_SUCCESS_EMAIL_API: BASE_URL + "/payment/sendPaymentSuccessEmail",
+// COURSE PROGRESS API
+export const courseProgressApi = {
+  POST_MARK_SUBSECTION_AS_COMPLETED:
+    BASE_URL + "/courseprogress/marksubsectionascompleted",
 };
 
-// Course Ka url hai bhai
-export const courseEndpoints = {
-  GET_ALL_COURSE_API: BASE_URL + "/course/getAllCourses",
-  COURSE_DETAILS_API: BASE_URL + "/course/getCourseDetails",
-  EDIT_COURSE_API: BASE_URL + "/course/editCourse",
-  COURSE_CATEGORIES_API: BASE_URL + "/course/showAllCategories",
-  CREATE_COURSE_API: BASE_URL + "/course/createCourse",
-  CREATE_SECTION_API: BASE_URL + "/course/addSection",
-  CREATE_SUBSECTION_API: BASE_URL + "/course/addSubSection",
-  UPDATE_SECTION_API: BASE_URL + "/course/updateSection",
-  UPDATE_SUBSECTION_API: BASE_URL + "/course/updateSubSection",
-  GET_ALL_INSTRUCTOR_COURSES_API: BASE_URL + "/course/getInstructorCourses",
-  DELETE_SECTION_API: BASE_URL + "/course/deleteSection",
-  DELETE_SUBSECTION_API: BASE_URL + "/course/deleteSubSection",
-  DELETE_COURSE_API: BASE_URL + "/course/deleteCourse",
-  GET_FULL_COURSE_DETAILS_AUTHENTICATED:
-    BASE_URL + "/course/getFullCourseDetails",
-  LECTURE_COMPLETION_API: BASE_URL + "/course/updateCourseProgress",
-  CREATE_RATING_API: BASE_URL + "/course/createRating",
+// COURSE API
+export const courseApi = {
+  GET_GET_ALL_COURSES_API: BASE_URL + "/courses",
+  GET_GET_COURSE_DATA_API: BASE_URL + "/courses/getcourse", // /courseId
+  POST_GET_FULL_DETAILS_OF_COURSE: BASE_URL + "/courses/getfullcoursedetails",
+  POST_CREATE_COURSE_API: BASE_URL + "/courses",
+  PUT_EDIT_COURSE_API: BASE_URL + "/courses/editcourse",
+  DELETE_DELETE_COURSE_API: BASE_URL + "/courses/deletecourse",
+  POST_GET_ENROLLED_COURSE_DATA: BASE_URL + "/courses/getenrolledcoursedata",
 };
 
-// ratings Ka url hai bhai
-export const ratingsEndpoints = {
-  REVIEWS_DETAILS_API: BASE_URL + "/course/getReviews",
+// OTHER API
+export const otherApi = {
+  POST_CONTACT_US: BASE_URL + "/other/contactus",
 };
 
-// categories ka hai
-export const categories = {
-  CATEGORIES_API: BASE_URL + "/course/showAllCategories",
+// PAYMENT API
+export const paymentApi = {
+  POST_CREATE_ORDER_API: BASE_URL + "/payments/createorder",
+  POST_VERIFY_PAYMENT_SIGNATURE_API:
+    BASE_URL + "/payments/verifypaymentsignature",
+  POST_SEND_PAYMENT_SUCCESS_EMAIL_API:
+    BASE_URL + "/payments/sendpaymentsuccessemail",
 };
 
-// catlog aur data hai
-export const catalogData = {
-  CATALOGPAGEDATA_API: BASE_URL + "/course/getCategoryPageDetails",
-};
-// Contact ka hai
-export const contactusEndpoint = {
-  CONTACT_US_API: BASE_URL + "/reach/contact",
+// PROFILE API
+export const profileApi = {
+  PUT_UPDATE_PROFILE_API: BASE_URL + "/profiles ",
 };
 
-// Settings ka hai
-export const settingsEndpoints = {
-  UPDATE_DISPLAY_PICTURE_API: BASE_URL + "/profile/updateDisplayPicture",
-  UPDATE_PROFILE_API: BASE_URL + "/profile/updateProfile",
-  CHANGE_PASSWORD_API: BASE_URL + "/auth/changepassword",
-  DELETE_PROFILE_API: BASE_URL + "/profile/deleteProfile",
+// REVIEW API
+export const reviewApi = {
+  GET_GET_ALL_REVIEWS_API: BASE_URL + "/reviews/getallreviews",
+  POST_GET_REVIEW_API: BASE_URL + "/reviews/getreview",
+  POST_GET_ALL_REVIEWS_OF_COURSE_API: BASE_URL + "/reviews/getreviewsofcourse",
+  POST_CREATE_REVIEW_API: BASE_URL + "/reviews/createreview",
+  DELETE_DELETE_REVIEW_API: BASE_URL + "/reviews/deletereview",
+};
+
+// SECTION API
+export const sectionApi = {
+  POST_CREATE_SECTION_API: BASE_URL + "/sections",
+  PUT_UPDATE_SECTION_API: BASE_URL + "/sections",
+  DELETE_DELETE_SECTION_API: BASE_URL + "/sections",
+};
+
+// SUBSECTION API
+export const subsectionApi = {
+  POST_CREATE_SUBSECTION_API: BASE_URL + "/subsections",
+  PUT_UPDATE_SUBSECTION_API: BASE_URL + "/subsections",
+  DELETE_DELETE_SUBSECTION_API: BASE_URL + "/subsections",
+};
+
+// USER API
+export const userApi = {
+  GET_GET_ALL_USERS_API: BASE_URL + "/users",
+  GET_GET_USER_API: BASE_URL + "/users/getuser", // /userId
+  PUT_CHANGE_AVATAR_API: BASE_URL + "/users/changeavatar",
+  GET_GET_ENROLLED_COURSES_API: BASE_URL + "/users/getenrolledcourses",
+  GET_GET_CREATED_COURSES_API: BASE_URL + "/users/getcreatedcourses",
+  GET_GET_INSTRUCTOR_DASHBOARD_DATA_API:
+    BASE_URL + "/users/getinstructordashboarddata",
+  GET_GET_ALL_REVIEWS_BY_USER_API: BASE_URL + "/users/getallreviews",
+  DELETE_DELETE_CURRENT_USER_API: BASE_URL + "/users/deletecurrentuser",
+  GET_CURRENT_LOGGED_USER_API: BASE_URL + "/users/currentuser",
 };

@@ -1,45 +1,42 @@
 const mongoose = require("mongoose");
-const mailSender = require("../utils/mailSender");
-const emailTemplate = require("../mail/templates/emailVerificationTemplate");
+const clgDev = require("../utils/clgDev");
+const emailSender = require("../utils/emailSender");
+const emailOtpTemplate = require("../mail/templates/emailOtpTemplate");
+
 const OTPSchema = new mongoose.Schema({
-  email: {
+  otp: {
     type: String,
     required: true,
   },
-  otp: {
+  email: {
     type: String,
     required: true,
   },
   createdAt: {
     type: Date,
     default: Date.now,
-    expires: 60 * 5, //document 5 minbade delete ho jayega
+    expires: "10m", // The document will automatically deleted after 10 minutes of its creation time
   },
 });
 
-async function sendVerificationEmail(email, otp) {
+const sendOtpEmail = async (toEmail, otp) => {
   try {
-    const mailResponse = await mailSender(
-      email,
-      "Verification Email",
-      emailTemplate(otp)
+    const mailResponse = await emailSender(
+      toEmail,
+      "Verification Email from StudyNotion",
+      emailOtpTemplate(otp)
     );
-    console.log("Email sent successfully: ", mailResponse.response);
-  } catch (error) {
-    console.log("Error occurred while sending email: ", error);
-    throw error;
+  } catch (err) {
+    clgDev(`Error occurred while sending otp : ${err.message}`);
+    throw err;
   }
-}
+};
 
-OTPSchema.pre("save", async function (next) {
-  console.log("New document saved to database");
-
-  if (this.isNew) {
-    await sendVerificationEmail(this.email, this.otp);
-  }
-  next();
+// Send otp after OTP is created
+OTPSchema.post("save", async function (doc) {
+  // Only send an email when a new document is created
+  // this.isNew in pre middleware
+  await sendOtpEmail(this.email, this.otp);
 });
 
-const OTP = mongoose.model("OTP", OTPSchema);
-
-module.exports = OTP;
+module.exports = mongoose.model("OTP", OTPSchema);

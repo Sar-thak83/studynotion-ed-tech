@@ -1,47 +1,123 @@
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Outlet, useParams } from "react-router-dom";
-import CourseReviewModal from "../components/core/ViewCourse/CourseReviewModal";
-import VideoDetailsSidebar from "../components/core/ViewCourse/VideoDetailsSidebar";
-import { getFullDetailsOfCourse } from "../services/operations/courseDetailsAPI";
-import {
-  setCompletedLectures,
-  setCourseSectionData,
-  setEntireCourseData,
-  setTotalNoOfLectures,
-} from "../slices/viewCourseSlice";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import Spinner from "../components/common/Spinner";
+import { fetchEnrolledCourseData } from "../services/operations/studentFeaturesServices";
+import { useDispatch } from "react-redux";
+import CourseDetailsSidebar from "../components/core/ViewCourse/CourseDetailsSidebar";
+import VideoDetails from "../components/core/ViewCourse/VideoDetails";
+import AddReviewModal from "../components/core/ViewCourse/AddReviewModal";
 
-export default function ViewCourse() {
-  const { courseId } = useParams();
+const ViewCourse = () => {
   const { token } = useSelector((state) => state.auth);
+  const { courseId, sectionId, subSectionId } = useParams();
+  const [loading, setLoading] = useState(true);
+  const { courseData } = useSelector((state) => state.viewCourse);
   const dispatch = useDispatch();
-  const [reviewModal, setReviewModal] = useState(false);
+  const [isOpenReviewModal, setIsOpenReviewModal] = useState(false);
+  const [currentOpenSection, setCurrentOpenSection] = useState("");
+  const [currentSubSection, setCurrentSubSection] = useState("");
+  const navigate = useNavigate();
+
+  // Fetch course details
+  useEffect(() => {
+    setLoading(true);
+    if (!(courseId && sectionId && subSectionId)) {
+      navigate("/dashboard/enrolled-courses");
+      return;
+    }
+
+    const fetchCourseData = async () => {
+      await fetchEnrolledCourseData(courseId, token, dispatch);
+    };
+    fetchCourseData();
+    setLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [courseId, token, dispatch]);
 
   useEffect(() => {
-    (async () => {
-      const courseData = await getFullDetailsOfCourse(courseId, token);
-      dispatch(setCourseSectionData(courseData.courseDetails.courseContent));
-      dispatch(setEntireCourseData(courseData.courseDetails));
-      dispatch(setCompletedLectures(courseData.completedVideos));
-      let lectures = 0;
-      courseData?.courseDetails?.courseContent?.forEach((sec) => {
-        lectures += sec.subSection.length;
-      });
-      dispatch(setTotalNoOfLectures(lectures));
+    // ; (() => { })() // other way to call function
+
+    if (!(courseId && sectionId && subSectionId)) {
+      navigate("/dashboard/enrolled-courses");
+      return;
+    }
+
+    if (!courseData) return;
+
+    (() => {
+      // Mark current section and subsection
+      let wrongDataFound = false;
+
+      let currentSectionInd = courseData.sections.findIndex(
+        (section) => section._id === sectionId
+      );
+      if (currentSectionInd === -1) {
+        currentSectionInd = 0;
+        wrongDataFound = true;
+      }
+
+      let currentSubsectionInd = courseData.sections[
+        currentSectionInd
+      ].subSections.findIndex((subSection) => subSection._id === subSectionId);
+      if (currentSubsectionInd === -1) {
+        currentSubsectionInd = 0;
+        wrongDataFound = true;
+      }
+
+      if (wrongDataFound) {
+        return navigate(
+          `/view-course/${courseId}/section/${courseData.sections[currentSectionInd]._id}/sub-section/${courseData.sections[currentSectionInd].subSections[currentSubsectionInd]._id}`
+        );
+      }
+
+      setCurrentOpenSection(courseData.sections[currentSectionInd]._id);
+      setCurrentSubSection(
+        courseData.sections[currentSectionInd].subSections[currentSubsectionInd]
+      );
     })();
-  }, []);
+  }, [courseData, sectionId, subSectionId, navigate, courseId]);
 
   return (
-    <>
-      <div className="relative flex min-h-[calc(100vh-3.5rem)]">
-        <VideoDetailsSidebar setReviewModal={setReviewModal} />
-        <div className="h-[calc(100vh-3.5rem)] flex-1 overflow-auto">
-          <div className="mx-6">
-            <Outlet />
-          </div>
+    <div className="bg-[#000814]">
+      {loading ? (
+        <div className="min-h-[calc(100vh-10rem)] flex justify-center items-center">
+          <Spinner />
         </div>
-      </div>
-      {reviewModal && <CourseReviewModal setReviewModal={setReviewModal} />}
-    </>
+      ) : !courseData ? (
+        <div className="min-h-[calc(100vh-10rem)] flex flex-col justify-center items-center text-[#999DAA] mx-auto font-semibold text-center mt-10 text-xl space-y-5">
+          <p className="">No Such Course (or Lecture) Found !!</p>
+          <p className="">Check URL</p>
+        </div>
+      ) : (
+        <div className="relative flex bg-[#000814] text-white">
+          {/* left - Course Details SideBar */}
+          <div className="min-h-[calc(100vh-3.5rem)] bg-[#161D29]">
+            <div className="h-[calc(100vh-3.5rem)] last:text-white w-[175px] md:w-[350px] max-w-[450px] ">
+              <CourseDetailsSidebar
+                currentOpenSection={currentOpenSection}
+                setCurrentOpenSection={setCurrentOpenSection}
+                currentSubSection={currentSubSection}
+                setCurrentSubSection={setCurrentSubSection}
+                setIsOpenReviewModal={setIsOpenReviewModal}
+              />
+            </div>
+          </div>
+
+          {/* Right - Video Player */}
+          <div className="min-h-[calc(100vh-3.5rem)] w-full bg-[#F37290]">
+            <div className="overflow-y-auto w-full bg-[#161D29] h-[calc(100vh-3.5rem)]">
+              <VideoDetails subSection={currentSubSection} loading={loading} />
+            </div>
+          </div>
+
+          {isOpenReviewModal && (
+            <AddReviewModal setIsOpenReviewModal={setIsOpenReviewModal} />
+          )}
+        </div>
+      )}
+    </div>
   );
-}
+};
+
+export default ViewCourse;

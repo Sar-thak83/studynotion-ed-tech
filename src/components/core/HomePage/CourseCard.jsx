@@ -2,42 +2,43 @@ import React from "react";
 import { HiUsers } from "react-icons/hi";
 import { ImTree } from "react-icons/im";
 
-const CourseCard = ({ cardData, currentCard, setCurrentCard }) => {
+const CourseCard = ({ course, currentCard, setCurrentCard }) => {
   return (
     <div
-      className={`w-[360px] lg:w-[30%] ${
-        currentCard === cardData?.heading
+      onClick={() => setCurrentCard(course.heading)}
+      className={`w-[360px] lg:w-[30%] h-[300px]  cursor-grab text-[#DBDDEA]
+      ${
+        course.heading === currentCard
           ? "bg-white shadow-[12px_12px_0_0] shadow-[#FFD60A]"
           : "bg-[#161D29]"
-      }  text-[#DBDDEA] h-[300px] box-border cursor-pointer`}
-      onClick={() => setCurrentCard(cardData?.heading)}
+      }`}
     >
-      <div className="border-b-[2px] border-[#6E727F] border-dashed h-[80%] p-6 flex flex-col gap-3">
-        <div
-          className={` ${
-            currentCard === cardData?.heading && "text-[#161D29]"
-          } font-semibold text-[20px]`}
+      <div className=" flex flex-col gap-3 h-[80%] p-6 border-b-2 border-dashed border-[#6E727F]">
+        <h2
+          className={`font-semibold text-xl
+        ${course?.heading === currentCard && "text-[#161D29]"}`}
         >
-          {cardData?.heading}
-        </div>
-
-        <div className="text-[#6E727F]">{cardData?.description}</div>
+          {course.heading}
+        </h2>
+        <h2 className="text-[#6E727F]">{course.description}</h2>
       </div>
 
       <div
-        className={`flex justify-between ${
-          currentCard === cardData?.heading
-            ? "text-[#0F7A9D]"
-            : "text-[#838894]"
-        } px-6 py-3 font-medium`}
+        className={`flex flex-row justify-between px-6 py-3 font-medium
+              ${
+                course?.heading === currentCard
+                  ? "text-[#0F7A9D]"
+                  : "text-[#838894]"
+              }`}
       >
-        <div className="flex items-center gap-2 text-[16px]">
+        <div className="flex flex-row items-center gap-2 text-base">
           <HiUsers />
-          <p>{cardData?.level}</p>
+          {course.level}
         </div>
-        <div className="flex items-center gap-2 text-[16px]">
+
+        <div className="flex flex-row items-center  gap-2 text-base">
           <ImTree />
-          <p>{cardData?.lessionNumber} Lession</p>
+          {course.lessionNumber} Lesson
         </div>
       </div>
     </div>
