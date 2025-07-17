@@ -3,7 +3,6 @@ const clgDev = require("./clgDev");
 
 const emailSender = async (toEmail, subject, body) => {
   try {
-    // For real purpose
     const transporter = nodemailer.createTransport({
       host: process.env.MAIL_HOST,
       auth: {
@@ -11,18 +10,7 @@ const emailSender = async (toEmail, subject, body) => {
         pass: process.env.MAIL_PASS,
       },
     });
-
-    // // For testing / development purpose
-    // const transporter = nodemailer.createTransport({
-    //   host: process.env.SMTP_HOST,
-    //   port: process.env.SMTP_PORT,
-    //   auth: {
-    //     user: process.env.SMTP_EMAIL,
-    //     pass: process.env.SMTP_PASSWORD,
-    //   },
-    // });
-
-    // send mail
+    // Mail transpoter is created using nodemailer
     const info = await transporter.sendMail({
       from: `${process.env.FROM_NAME}  <${process.env.FROM_EMAIL}>`,
       to: toEmail,

@@ -1,60 +1,3 @@
-// const express = require("express");
-// const app = express();
-
-// const userRoutes = require("./routes/User");
-// const profileRoutes = require("./routes/Profile");
-// const paymentRoutes = require("./routes/Payments");
-// const courseRoutes = require("./routes/Course");
-// const contactUsRoute = require("./routes/Contact");
-// const database = require("./confiq/database");
-// const cookieParser = require("cookie-parser");
-// const cors = require("cors");
-// const { cloudinaryConnect } = require("./confiq/cloudinary");
-// const fileUpload = require("express-fileupload");
-// const dotenv = require("dotenv");
-
-// dotenv.config();
-// const PORT = process.env.PORT || 4000;
-
-// //database connect kiya hai
-// database.connect();
-
-// app.use(express.json());
-// app.use(cookieParser());
-// app.use(
-//   cors({
-//     origin: "http://localhost:5173",
-//     credentials: true,
-//   })
-// );
-
-// app.use(
-//   fileUpload({
-//     useTempFiles: true,
-//     tempFileDir: "/tmp",
-//   })
-// );
-// //cloudinary connection kiya hai
-// cloudinaryConnect();
-
-// //routes
-// app.use("/api/v1/auth", userRoutes);
-// app.use("/api/v1/profile", profileRoutes);
-// app.use("/api/v1/course", courseRoutes);
-// app.use("/api/v1/payment", paymentRoutes);
-// app.use("/api/v1/reach", contactUsRoute);
-
-// app.get("/", (req, res) => {
-//   return res.json({
-//     success: true,
-//     message: "Your server is up and running....",
-//   });
-// });
-
-// app.listen(PORT, () => {
-//   console.log(`App is running at ${PORT}`);
-// });
-
 const express = require("express");
 const colors = require("colors");
 const morgan = require("morgan");
@@ -71,6 +14,20 @@ const cloudinaryConnect = require("./config/cloudinaryConnect");
 dotenv.config({ path: "./config/.env" });
 const PORT = process.env.PORT || 11000;
 const app = express();
+
+// CORS Configuration for Docker
+const corsOptions = {
+  origin: [
+    "http://localhost:3000", // Frontend container
+    "http://localhost:5173", // Development
+    "http://frontend:80", // Docker internal network
+    process.env.STUDY_NOTION_FRONTEND_SITE, // From env variable
+  ].filter(Boolean), // Remove undefined values
+  credentials: true,
+  optionsSuccessStatus: 200,
+};
+
+// Connect to database and Cloudinary
 connectDB();
 cloudinaryConnect();
 
@@ -79,7 +36,8 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
-app.use(express.json());
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 app.use(
   fileUpload({
     useTempFiles: true,
@@ -87,8 +45,18 @@ app.use(
   })
 );
 app.use(cookieParser());
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.static(path.join(__dirname, "public")));
+
+// Health Check Endpoint for Docker
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "OK",
+    timestamp: new Date().toISOString(),
+    service: "StudyNotion Backend",
+    environment: process.env.NODE_ENV || "development",
+  });
+});
 
 // Mount routes
 const AuthR = require("./routes/AuthR");
@@ -115,26 +83,46 @@ app.use("/api/v1/users", UserR);
 app.use("/api/v1/other", OtherR);
 app.use("/api/v1/courseprogress", CourseProgressR);
 
-app.use(errorHandler); // must be after mounting the routes
+app.use(errorHandler); // jaruri hai route ke baad use karna
 
 app.get("/", (req, res) => {
-  res.send("Hello ji");
+  res.json({
+    message: "StudyNotion API is running",
+    version: "1.0.0",
+    environment: process.env.NODE_ENV || "development",
+    timestamp: new Date().toISOString(),
+  });
 });
 
-app.listen(PORT, (err) => {
+// Handle 404 routes
+app.use("*", (req, res) => {
+  res.status(404).json({
+    success: false,
+    message: `Route ${req.originalUrl} not found`,
+  });
+});
+
+// Graceful shutdown for Docker
+process.on("SIGTERM", () => {
+  clgDev("SIGTERM received, shutting down gracefully");
+  server.close(() => {
+    clgDev("Process terminated");
+    process.exit(0);
+  });
+});
+
+process.on("SIGINT", () => {
+  clgDev("SIGINT received, shutting down gracefully");
+  server.close(() => {
+    clgDev("Process terminated");
+    process.exit(0);
+  });
+});
+
+const server = app.listen(PORT, "0.0.0.0", (err) => {
   if (err) {
     clgDev("Error occurred creating server");
-    process.exit();
+    process.exit(1);
   }
-  clgDev(`Server in running on ${PORT}`.yellow.underline.bold);
+  clgDev(`Server is running on ${PORT}`.yellow.underline.bold);
 });
-
-// TODO : check for these, what it is
-/**
- * // handle unhandled promise rejection
- * process.on("unhandledRejection", (err, promise) => {
- *  clgDev(`Error : ${err.message}`.red);
- *  // close server & exit process
- *  server.close(()=>process.exit(1));
- * });
- */

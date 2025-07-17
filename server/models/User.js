@@ -69,7 +69,7 @@ const userSchema = new mongoose.Schema(
         ref: "Review",
       },
     ],
-    token: String, // TODO - check if we can remove these 5 fields
+    token: String,
     resetPasswordToken: String,
     resetPasswordExpire: Date,
   },

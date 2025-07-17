@@ -1,17 +1,19 @@
-const clgDev = require('../utils/clgDev');
-const ErrorResponse = require('../utils/ErrorResponse');
-const emailSender = require('../utils/emailSender');
-const { contactUsEmail } = require('../mail/templates/contactFormRes');
+const clgDev = require("../utils/clgDev");
+const ErrorResponse = require("../utils/ErrorResponse");
+const emailSender = require("../utils/emailSender");
+const { contactUsEmail } = require("../mail/templates/contactFormRes");
 
-// @desc      Contact us
-// @route     POST /api/v1/other/contactus
-// @access    Public
+// Contact us
+
 exports.contactUs = async (req, res, next) => {
   try {
-    const { firstName, lastName, email, countryCode, phoneNo, message } = req.body;
+    const { firstName, lastName, email, countryCode, phoneNo, message } =
+      req.body;
 
-    if (!(firstName && lastName && email && countryCode && phoneNo && message)) {
-      return next(new ErrorResponse('Some fields are missing', 400));
+    if (
+      !(firstName && lastName && email && countryCode && phoneNo && message)
+    ) {
+      return next(new ErrorResponse("Some fields are missing", 400));
     }
 
     try {
@@ -32,16 +34,27 @@ exports.contactUs = async (req, res, next) => {
       `
       );
 
-      const mailResponse2 = await emailSender(email, 'Your Data sent to us successfully', contactUsEmail(email, firstName, lastName, message, phoneNo, countryCode));
+      const mailResponse2 = await emailSender(
+        email,
+        "Your Data sent to us successfully",
+        contactUsEmail(
+          email,
+          firstName,
+          lastName,
+          message,
+          phoneNo,
+          countryCode
+        )
+      );
 
       return res.json({
         success: true,
-        data: 'Details sent successfully',
+        data: "Details sent successfully",
       });
     } catch (err) {
-      return next(new ErrorResponse('Error occurred while sending email', 500));
+      return next(new ErrorResponse("Error occurred while sending email", 500));
     }
   } catch (err) {
-    next(new ErrorResponse('Details send failed', 500));
+    next(new ErrorResponse("Details send failed", 500));
   }
 };

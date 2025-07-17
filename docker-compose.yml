@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  # Backend Service
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: studynotion-backend
+    restart: unless-stopped
+    ports:
+      - "11000:11000"
+    environment:
+      NODE_ENV: production
+      PORT: 11000
+      MONGO_URI: ${MONGO_URI}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRE: 30d
+      JWT_COOKIE_EXPIRE: 30
+      MAIL_HOST: smtp.gmail.com
+      MAIL_USER: ${MAIL_USER}
+      MAIL_PASS: ${MAIL_PASS}
+      FROM_NAME: Sarthak
+      FROM_EMAIL: ${FROM_EMAIL}
+      SITE_OWNER_EMAIL: ${SITE_OWNER_EMAIL}
+      CLOUDINARY_CLOUD_NAME: ${CLOUDINARY_CLOUD_NAME}
+      CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY}
+      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET}
+      RAZORPAY_PAY_KEY_ID: ${RAZORPAY_PAY_KEY_ID}
+      RAZORPAY_PAY_KEY_SECRET: ${RAZORPAY_PAY_KEY_SECRET}
+      RAZORPAY_WEBHOOK_SECRET: ${RAZORPAY_WEBHOOK_SECRET}
+      RAZORPAY_MERCHANT_ID: ${RAZORPAY_MERCHANT_ID}
+      AVATAR_FOLDER_NAME: StudyNotion/avatars
+      THUMBNAIL_FOLDER_NAME: StudyNotion/thumbnail
+      VIDEO_FOLDER_NAME: StudyNotion/video
+      AVATAR_MAX_SIZE: 512000
+      THUMBNAIL_MAX_SIZE: 1048576
+      VIDEO_MAX_SIZE: 52428800
+      STUDY_NOTION_BACKEND_SITE: http://localhost:11000
+      STUDY_NOTION_FRONTEND_SITE: http://localhost:3000
+    volumes:
+      - ./server/uploads:/app/uploads
+    networks:
+      - studynotion-network
+
+  # Frontend Service
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: studynotion-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    environment:
+      - VITE_BASE_URL=http://localhost:11000/api/v1
+      - VITE_RAZORPAY_PAY_KEY_ID=${RAZORPAY_PAY_KEY_ID}
+    depends_on:
+      - backend
+    networks:
+      - studynotion-network
+
+networks:
+  studynotion-network:
+    driver: bridge

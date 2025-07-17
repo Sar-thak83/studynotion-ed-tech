@@ -54,7 +54,6 @@ const courseSchema = new mongoose.Schema(
         ref: "Section",
       },
     ],
-    // timeDuration will be in seconds
     totalDuration: {
       type: Number,
       required: true,

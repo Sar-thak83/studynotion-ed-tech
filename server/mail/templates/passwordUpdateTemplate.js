@@ -85,7 +85,7 @@ const passwordUpdateTemplate = (email, name) => {
 
       <!-- Footer -->
       <div class="support">
-        <p>If you have any questions or need assistance, please feel free to reach out to us at <a href="mailto:moviesguruji73529+info@gmail.com">moviesguruji73529+info@gmail.com</a>. We are here to help!</p>
+        <p>If you have any questions or need assistance, please feel free to reach out to us at <a href="mailto:studynotioninfo8574@gmail.com">studynotioninfo8574@gmail.com</a>. We are here to help!</p>
       </div>
     </div>
 	</body>

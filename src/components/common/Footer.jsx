@@ -36,19 +36,21 @@ const Footer = () => {
               </Link>
               <FooterCard data={footerLinks[0]} />
               <div className="flex gap-3 text-lg text-[#6E727F] -mt-5">
-                <Link to={"https://www.linkedin.com/in/sunny8080/"}>
+                <Link
+                  to={"https://www.linkedin.com/in/sarthak-sahu-5878082b2/"}
+                >
                   <FaLinkedin />
                 </Link>
-                <Link to={"https://twitter.com/sunny8080_"}>
+                <Link to={"https://twitter.com/Sarth_k83"}>
                   <FaTwitter />
                 </Link>
                 <Link to={"https://www.youtube.com/"}>
                   <FaYoutube />
                 </Link>
-                <Link to={"https://www.facebook.com/sunny80801/"}>
+                <Link to={"https://www.facebook.com/"}>
                   <FaFacebook />
                 </Link>
-                <Link to={"https://www.instagram.com/sunny8080_/"}>
+                <Link to={"https://www.instagram.com/_sarthak._.83"}>
                   <FaInstagram />
                 </Link>
               </div>
