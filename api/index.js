@@ -23,7 +23,7 @@ cloudinaryConnect();
 
 // CORS Configuration
 const corsOptions = {
-  origin: function (origin, callback) {
+  origin: function (origin, callback) {th
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
     
@@ -96,6 +96,7 @@ app.get('/api/health', (req, res) => {
     status: 'OK',
     timestamp: new Date().toISOString(),
     service: 'StudyNotion Backend',
+    cors: 'enabled'
   });
 });
 
